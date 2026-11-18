@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Upload, Image as ImageIcon, Calendar as CalendarIcon, MapPin, Clock, Tag, Check, DollarSign, X, Sparkles } from "lucide-react"
+import { ArrowLeft, Upload, Image as ImageIcon, Calendar as CalendarIcon, MapPin, Clock, Tag, Check, DollarSign, X, Sparkles, Trash2 } from "lucide-react"
 import { saveNewEvent } from "@/lib/events-store"
 
 const PRESET_BANNERS = [
@@ -29,6 +29,7 @@ export default function CreateEventPage() {
   // Photo state
   const [coverImage, setCoverImage] = React.useState<string>(PRESET_BANNERS[0].url)
   const [imageFileName, setImageFileName] = React.useState<string>("")
+  const [isCustomUpload, setIsCustomUpload] = React.useState<boolean>(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
   const [errorMsg, setErrorMsg] = React.useState("")
@@ -56,15 +57,31 @@ export default function CreateEventPage() {
     reader.onload = (event) => {
       if (typeof event.target?.result === "string") {
         setCoverImage(event.target.result)
+        setIsCustomUpload(true) // Lock custom photo!
       }
     }
     reader.readAsDataURL(file)
   }
 
+  // Remove custom photo and revert to a preset
+  const handleRemoveCustomPhoto = () => {
+    setIsCustomUpload(false)
+    setImageFileName("")
+    setCoverImage(PRESET_BANNERS[0].url)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
+  }
+
+  // Handle preset selection (only if user explicitly clicks preset)
   const handleSelectPreset = (url: string) => {
     setCoverImage(url)
+    setIsCustomUpload(false)
     setImageFileName("")
     setErrorMsg("")
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -87,7 +104,6 @@ export default function CreateEventPage() {
     setIsSubmitting(true)
 
     try {
-      // Actually save the event in persistent store
       saveNewEvent({
         title,
         description: description || "No detailed description provided.",
@@ -103,11 +119,10 @@ export default function CreateEventPage() {
       setSuccess(true)
       setIsSubmitting(false)
 
-      // Redirect to events catalog where the new event is visible
       setTimeout(() => {
         router.push("/events")
       }, 1000)
-    } catch (err) {
+    } catch {
       setIsSubmitting(false)
       setErrorMsg("Failed to save event. Please check your storage settings.")
     }
@@ -127,7 +142,7 @@ export default function CreateEventPage() {
 
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-            <span className="text-[11px] text-zinc-400 font-mono">Live Event Publisher</span>
+            <span className="text-[11px] text-zinc-400 font-mono">Event Publisher</span>
           </div>
         </div>
       </header>
@@ -136,7 +151,7 @@ export default function CreateEventPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-extrabold tracking-tight text-white">Create New Event</h1>
           <p className="text-zinc-400 text-sm mt-1">
-            Fill in the details below. Once published, your event will immediately appear on the public catalog and your organizer dashboard.
+            Fill in the details below. Your uploaded photo will be locked to this event and published to the live registry.
           </p>
         </div>
 
@@ -158,28 +173,42 @@ export default function CreateEventPage() {
                   <ImageIcon className="w-4 h-4 text-yellow-400" /> Event Cover Photo
                 </h2>
                 <p className="text-xs text-zinc-400 mt-0.5">
-                  Upload an image from your device or pick a curated architectural preset.
+                  {isCustomUpload
+                    ? "Your custom image is locked and will be saved with the event."
+                    : "Upload an image from your device or select an optional starter preset."}
                 </p>
               </div>
-              {imageFileName && (
-                <span className="text-[11px] text-yellow-400 bg-yellow-400/10 px-2.5 py-1 rounded-full border border-yellow-400/30 font-medium truncate max-w-[200px]">
-                  {imageFileName}
-                </span>
+
+              {isCustomUpload && (
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30 font-semibold flex items-center gap-1.5">
+                    <Check className="w-3.5 h-3.5" /> Uploaded: {imageFileName || "Custom File"}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleRemoveCustomPhoto}
+                    className="p-1.5 rounded-lg border border-zinc-800 text-zinc-400 hover:text-red-400 hover:bg-zinc-800 transition-colors"
+                    title="Remove custom photo and use preset"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               )}
             </div>
 
-            {/* Active Banner Preview with Upload Trigger */}
+            {/* Active Banner Preview with Upload Action */}
             <div className="relative aspect-[21/9] w-full rounded-xl border border-zinc-700/80 overflow-hidden bg-zinc-950 group">
               <img
                 src={coverImage}
                 alt="Event Cover Preview"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent flex flex-col justify-end p-5">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="text-xs text-zinc-300 font-medium">
-                    Recommended resolution: 1920×1080 (16:9 or 21:9)
+                    {isCustomUpload ? "Custom photo locked • Click change to pick another" : "Recommended: 1920×1080 (16:9 or 21:9)"}
                   </div>
+
                   <div className="flex items-center gap-2">
                     <input
                       type="file"
@@ -194,40 +223,53 @@ export default function CreateEventPage() {
                       className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-zinc-950 text-xs font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95"
                     >
                       <Upload className="w-3.5 h-3.5 stroke-[2.5]" />
-                      Upload from Device
+                      {isCustomUpload ? "Change Custom Photo" : "Upload from Device"}
                     </button>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Quick Presets */}
-            <div className="mt-4 pt-4 border-t border-zinc-800/80">
-              <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block mb-2.5">
-                Or select an instant theme preset:
-              </span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {PRESET_BANNERS.map((preset) => (
-                  <button
-                    key={preset.name}
-                    type="button"
-                    onClick={() => handleSelectPreset(preset.url)}
-                    className={`relative rounded-lg overflow-hidden border p-1 text-left transition-all ${
-                      coverImage === preset.url
-                        ? "border-yellow-400 ring-1 ring-yellow-400/50 bg-zinc-850"
-                        : "border-zinc-800 bg-zinc-900 hover:border-zinc-700"
-                    }`}
-                  >
-                    <div className="aspect-video w-full rounded overflow-hidden mb-1.5">
-                      <img src={preset.url} alt={preset.name} className="w-full h-full object-cover" />
-                    </div>
-                    <span className="text-[11px] font-semibold text-zinc-300 px-1 truncate block">
-                      {preset.name}
-                    </span>
-                  </button>
-                ))}
+            {/* Starter Presets: Disabled/Hidden when custom photo is active so it never overwrites! */}
+            {!isCustomUpload ? (
+              <div className="mt-4 pt-4 border-t border-zinc-800/80">
+                <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block mb-2.5">
+                  Or select an instant starter banner:
+                </span>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  {PRESET_BANNERS.map((preset) => (
+                    <button
+                      key={preset.name}
+                      type="button"
+                      onClick={() => handleSelectPreset(preset.url)}
+                      className={`relative rounded-lg overflow-hidden border p-1 text-left transition-all ${
+                        coverImage === preset.url
+                          ? "border-yellow-400 ring-1 ring-yellow-400/50 bg-zinc-850"
+                          : "border-zinc-800 bg-zinc-900 hover:border-zinc-750"
+                      }`}
+                    >
+                      <div className="aspect-video w-full rounded overflow-hidden mb-1.5">
+                        <img src={preset.url} alt={preset.name} className="w-full h-full object-cover" />
+                      </div>
+                      <span className="text-[11px] font-semibold text-zinc-300 px-1 truncate block">
+                        {preset.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="mt-3 text-[11px] text-zinc-400 flex items-center justify-between">
+                <span>Your custom image is locked and will not be overwritten by category choices.</span>
+                <button
+                  type="button"
+                  onClick={handleRemoveCustomPhoto}
+                  className="text-yellow-400 hover:underline font-semibold"
+                >
+                  Switch back to preset banners
+                </button>
+              </div>
+            )}
           </section>
 
           {/* Event Essentials */}
@@ -251,7 +293,7 @@ export default function CreateEventPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
-                  <Tag className="w-3.5 h-3.5 text-yellow-400" /> Category
+                  <Tag className="w-3.5 h-3.5 text-yellow-400" /> Event Category
                 </label>
                 <select
                   value={category}
@@ -264,6 +306,9 @@ export default function CreateEventPage() {
                   <option value="Music">Music</option>
                   <option value="Community">Community</option>
                 </select>
+                <span className="text-[10px] text-zinc-500">
+                  Categorizes your event in discovery filters (does not alter your custom cover photo).
+                </span>
               </div>
 
               <div className="flex flex-col gap-1.5">
