@@ -18,6 +18,17 @@ export default function EventsDiscoveryPage() {
   const [activeModalEvent, setActiveModalEvent] = React.useState<EventItem | null>(null)
   const [toastMessage, setToastMessage] = React.useState<string | null>(null)
 
+  // Close modal on Escape key press
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setActiveModalEvent(null)
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [])
+
   const categories = ["All", "Tech", "Design", "Founders", "Music", "Community"]
   const priceOptions: ("All" | "Free" | "Paid")[] = ["All", "Free", "Paid"]
 
@@ -373,13 +384,20 @@ export default function EventsDiscoveryPage() {
 
       {/* Event Details & Unique QR Digital Pass Modal */}
       {activeModalEvent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in-50">
-          <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-850 bg-zinc-950 p-6 shadow-2xl">
+        <div 
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setActiveModalEvent(null);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in-50 cursor-pointer"
+        >
+          <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-850 bg-zinc-950 p-6 shadow-2xl cursor-default">
+            {/* Top Close Button with text and icon */}
             <button
               onClick={() => setActiveModalEvent(null)}
-              className="absolute top-4 right-4 p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white"
+              className="absolute top-4 right-4 px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-850 text-xs font-semibold flex items-center gap-1.5 transition-colors z-10 shadow-sm"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
+              <span>Close</span>
             </button>
 
             {/* Banner */}
@@ -473,6 +491,13 @@ export default function EventsDiscoveryPage() {
               )}
 
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveModalEvent(null)}
+                  className="px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-850 hover:bg-zinc-800 text-xs font-bold text-zinc-200 hover:text-white transition-colors"
+                >
+                  Close
+                </button>
+
                 <button
                   onClick={() => handleShare(activeModalEvent)}
                   className="px-4 py-2.5 rounded-xl border border-zinc-800 text-xs font-bold text-zinc-300 hover:text-white hover:bg-zinc-850"
