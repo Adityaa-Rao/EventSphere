@@ -1,45 +1,45 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Brain, MessageSquare, Calendar, Zap, Sparkles, Shield } from "lucide-react"
+import { Brain, MessageSquare, Calendar, Shield, Sparkles } from "lucide-react"
 
 const features = [
   {
-    title: "AI Recommendations",
-    description: "Our neural engine suggests events based on your interests and past attendance with 99% accuracy.",
+    title: "Neural AI Matchmaker",
+    description: "Deep contextual recommendations based on career trajectory, technical interests, and past event interactions.",
     icon: Brain,
-    color: "from-purple-500 to-indigo-500",
-    delay: 0.1
+    badge: "AI 2.0",
+    delay: 0.1,
   },
   {
-    title: "Real-time Chat",
-    description: "Seamless networking with attendees and organizers directly within the event space.",
+    title: "Live Backchannel Chat",
+    description: "End-to-end encrypted breakout messaging and direct networking hubs built right inside live event streams.",
     icon: MessageSquare,
-    color: "from-blue-500 to-cyan-500",
-    delay: 0.2
+    badge: "Interactive",
+    delay: 0.2,
   },
   {
-    title: "Smart Scheduling",
-    description: "Automated conflict resolution and calendar sync across all your favorite platforms.",
+    title: "Autonomous Schedule Sync",
+    description: "Dynamic conflict resolution that updates calendars automatically when organizers adjust speaker agendas.",
     icon: Calendar,
-    color: "from-emerald-500 to-teal-500",
-    delay: 0.3
+    badge: "Automated",
+    delay: 0.3,
   },
   {
-    title: "Instant Verification",
-    description: "Blockchain-backed ticket verification ensuring zero fraud and instant entry.",
+    title: "Cryptographic Pass Verification",
+    description: "Cryptographically signed digital passes guaranteeing zero duplicate entries and rapid turnstile passage.",
     icon: Shield,
-    color: "from-orange-500 to-red-500",
-    delay: 0.4
-  }
+    badge: "Security",
+    delay: 0.4,
+  },
 ]
 
 export function FutureFeatures() {
   return (
-    <section className="py-24 relative overflow-hidden bg-background">
-      {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] -z-10" />
+    <section className="py-24 relative overflow-hidden bg-zinc-950/80 border-t border-zinc-800">
+      {/* Decorative ambient elements */}
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-yellow-400/5 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-slate-300/5 rounded-full blur-[140px] pointer-events-none -z-10" />
 
       <div className="container px-4 mx-auto max-w-7xl">
         <div className="text-center mb-16">
@@ -47,14 +47,16 @@ export function FutureFeatures() {
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-4 border border-primary/20"
+            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-zinc-900 border border-zinc-700 text-yellow-400 text-xs font-bold uppercase tracking-wider mb-4"
           >
-            <Sparkles className="w-3 h-3" />
-            <span>Coming Soon</span>
+            <Sparkles className="w-3.5 h-3.5 fill-yellow-400" />
+            <span>Product Roadmap</span>
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">The Future of <span className="text-gradient">Event Management</span></h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            We're building the next generation of tools to make your event experience seamless, interactive, and intelligent.
+          <h2 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-tight text-white">
+            The Next Evolution of <span className="text-gradient">Event Tech</span>
+          </h2>
+          <p className="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto">
+            We are pushing the boundaries of event infrastructure with intelligent automation and real-time collaboration.
           </p>
         </div>
 
@@ -66,19 +68,30 @@ export function FutureFeatures() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: feature.delay }}
-              whileHover={{ y: -8 }}
-              className="group relative p-8 rounded-3xl glass-card hover:bg-white/10 dark:hover:bg-zinc-900/60 transition-all border-white/10"
+              whileHover={{ y: -6 }}
+              className="group relative p-7 rounded-2xl border border-zinc-800 bg-zinc-900/50 hover:bg-zinc-900/80 hover:border-yellow-400/50 transition-all duration-300 flex flex-col justify-between"
             >
-              <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform`}>
-                <feature.icon className="w-6 h-6 text-white" />
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-xl bg-zinc-800 border border-zinc-700/80 flex items-center justify-center text-yellow-400 group-hover:bg-yellow-400 group-hover:text-zinc-950 transition-all duration-300 shadow-md">
+                    <feature.icon className="w-6 h-6" />
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
+                    {feature.badge}
+                  </span>
+                </div>
+                <h3 className="text-lg font-bold mb-2.5 text-zinc-100 group-hover:text-yellow-400 transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-zinc-400 text-sm leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
-              <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{feature.title}</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {feature.description}
-              </p>
-              
-              {/* Decorative Glow */}
-              <div className={`absolute -inset-px rounded-3xl bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 blur-xl transition-opacity -z-10`} />
+
+              <div className="mt-6 pt-4 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                <span className="text-zinc-400 font-mono">Q3/Q4 2026</span>
+                <span className="text-yellow-400 font-semibold group-hover:translate-x-1 transition-transform">In Development →</span>
+              </div>
             </motion.div>
           ))}
         </div>

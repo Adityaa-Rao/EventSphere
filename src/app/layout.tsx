@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-
 export const metadata: Metadata = {
-  title: "EventSphere | Premium Event Management",
-  description: "Create, manage, and discover amazing events with EventSphere.",
+  title: "EventSphere | The Modern Platform for Events",
+  description:
+    "Discover, organize, and experience unforgettable events. Powered by intelligent scheduling, instant RSVPs, and interactive live spaces.",
+  keywords: ["events", "conferences", "meetups", "tickets", "workshops", "networking"],
+  authors: [{ name: "EventSphere Team" }],
 };
 
 export default function RootLayout({
@@ -16,12 +16,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased min-h-screen bg-background text-foreground flex flex-col`}>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body className="font-sans antialiased min-h-screen bg-zinc-950 text-zinc-100 flex flex-col selection:bg-yellow-400 selection:text-zinc-950">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
-          enableSystem
+          enableSystem={false}
           disableTransitionOnChange
         >
           {children}

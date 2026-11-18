@@ -3,87 +3,204 @@
 import * as React from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { ArrowRight, Star } from "lucide-react"
+import { ArrowRight, Star, Calendar, Users, Sparkles, MapPin, CheckCircle2 } from "lucide-react"
 
 export function Hero() {
   return (
-    <section className="relative flex flex-col items-center justify-center min-h-screen px-4 pt-32 overflow-hidden text-center md:pt-40">
-      {/* Background Gradients */}
-      <div className="absolute top-0 inset-x-0 h-screen mesh-gradient opacity-20 -z-10" />
-      <div className="absolute top-[20%] left-[50%] -translate-x-1/2 w-[800px] h-[600px] bg-primary/20 rounded-full blur-[140px] -z-10 animate-pulse-slow" />
+    <section className="relative flex flex-col items-center justify-center min-h-screen px-4 pt-36 pb-20 overflow-hidden text-center md:pt-44">
+      {/* Background Gradients: Gray, Silver & Warm Yellow Ambient */}
+      <div className="absolute top-0 inset-x-0 h-full mesh-gradient pointer-events-none -z-10" />
+      <div className="absolute top-[18%] left-[50%] -translate-x-1/2 w-[600px] md:w-[900px] h-[500px] bg-yellow-400/10 rounded-full blur-[140px] -z-10 pointer-events-none animate-pulse-slow" />
+      <div className="absolute top-[45%] left-[20%] w-[400px] h-[400px] bg-slate-400/10 rounded-full blur-[120px] -z-10 pointer-events-none" />
 
+      {/* Floating Trust Badge */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="flex items-center gap-2 px-4 py-2 mb-8 text-sm font-medium border rounded-full glass-card text-primary border-primary/20 bg-white/5 backdrop-blur-xl"
+        className="flex items-center gap-2.5 px-4 py-2 mb-8 text-xs sm:text-sm font-semibold border rounded-full glass-card text-zinc-200 border-zinc-700/60 bg-zinc-900/60 shadow-lg"
       >
-        <Star className="w-4 h-4 fill-primary" />
-        <span>The #1 Premium Event Management Platform</span>
+        <span className="flex items-center justify-center w-5 h-5 rounded-full bg-yellow-400/20 text-yellow-400 border border-yellow-400/30">
+          <Star className="w-3 h-3 fill-yellow-400" />
+        </span>
+        <span className="text-zinc-300">The Modern Standard for Events</span>
+        <span className="px-2 py-0.5 text-[11px] font-bold tracking-wide uppercase rounded-full bg-yellow-400 text-zinc-950">
+          v2.0 Live
+        </span>
       </motion.div>
 
+      {/* Hero Title */}
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        className="max-w-5xl mb-6 text-6xl font-extrabold tracking-tight sm:text-7xl lg:text-9xl"
+        className="max-w-5xl mb-6 text-5xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl"
       >
-        Create events that <br className="hidden md:block" />
+        <span className="silver-gradient">Create events that</span>
+        <br />
         <span className="text-gradient">people remember.</span>
       </motion.h1>
 
+      {/* Subtitle */}
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="max-w-2xl mb-10 text-lg text-muted-foreground md:text-2xl leading-relaxed"
+        className="max-w-2xl mb-10 text-base sm:text-lg md:text-xl text-zinc-400 leading-relaxed font-normal"
       >
-        EventSphere is the all-in-one platform to discover, organize, and manage
-        premium events with ease. Join thousands of creators today.
+        EventSphere blends sleek design with intelligent scheduling, seamless RSVPs, and real-time interaction.
+        Built for creators, organizers, and communities worldwide.
       </motion.p>
 
+      {/* Action Buttons */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="flex flex-col gap-4 sm:flex-row relative z-20"
+        className="flex flex-col sm:flex-row gap-4 relative z-20 w-full sm:w-auto px-4"
       >
         <Link
           href="/register"
-          className="group relative flex items-center justify-center gap-2 px-10 py-5 text-lg font-bold text-white transition-all rounded-full bg-primary hover:bg-primary/90 hover:shadow-[0_0_40px_rgba(var(--primary),0.5)] overflow-hidden"
+          className="group relative flex items-center justify-center gap-2.5 px-8 py-4 text-base font-bold text-zinc-950 transition-all rounded-full bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 hover:shadow-[0_0_35px_rgba(250,204,21,0.45)] hover:scale-105 active:scale-95 overflow-hidden"
         >
-          <span className="relative z-10">Start for Free</span>
-          <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+          <span className="relative z-10">Start Organizing Free</span>
+          <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
         </Link>
         <Link
-          href="#events"
-          className="flex items-center justify-center gap-2 px-10 py-5 text-lg font-bold transition-all border rounded-full glass hover:bg-white/10 hover:scale-105"
+          href="/events"
+          className="flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-zinc-200 transition-all border rounded-full border-zinc-700/80 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-yellow-400 hover:border-yellow-400/40 hover:scale-105"
         >
-          Explore Events
+          <Calendar className="w-4 h-4 text-yellow-400" />
+          Explore Live Events
         </Link>
       </motion.div>
 
-      {/* Mockup Dashboard Image */}
+      {/* Key Metrics / Highlights */}
       <motion.div
-        initial={{ opacity: 0, y: 60, rotateX: 15 }}
-        animate={{ opacity: 1, y: 0, rotateX: 0 }}
-        transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="relative w-full max-w-6xl mt-24 group"
-        style={{ perspective: "2000px" }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+        className="flex flex-wrap items-center justify-center gap-6 sm:gap-12 mt-12 text-xs sm:text-sm text-zinc-400"
       >
-        <div className="absolute -inset-4 bg-gradient-to-b from-primary/20 to-transparent rounded-[2rem] blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-        <div className="relative border rounded-3xl glass-card overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] p-3 bg-white/5 border-white/20 aspect-video flex items-center justify-center animate-float">
-          <div className="absolute inset-0 bg-zinc-950/40 rounded-2xl flex flex-col items-center justify-center backdrop-blur-[2px]">
-            <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mb-4 border border-primary/30">
-              <Star className="w-10 h-10 text-primary animate-pulse" />
+        <div className="flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-yellow-400" />
+          <span>Zero Commission on Free Events</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-yellow-400" />
+          <span>Instant QR Code Ticketing</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-yellow-400" />
+          <span>99.9% Uptime Guarantee</span>
+        </div>
+      </motion.div>
+
+      {/* Rich Interactive Mockup Dashboard */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="relative w-full max-w-5xl mt-16 group"
+      >
+        <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400/20 via-zinc-400/10 to-yellow-500/20 rounded-3xl blur-2xl opacity-70 group-hover:opacity-100 transition-opacity duration-700" />
+
+        <div className="relative rounded-3xl border border-zinc-700/80 bg-zinc-950/90 shadow-[0_30px_70px_rgba(0,0,0,0.8)] overflow-hidden">
+          {/* Silver Window Header */}
+          <div className="flex items-center justify-between px-5 py-3 border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500/80" />
+              <div className="w-3 h-3 rounded-full bg-yellow-400/80" />
+              <div className="w-3 h-3 rounded-full bg-green-500/80" />
             </div>
-            <span className="text-zinc-400 font-bold tracking-widest text-sm uppercase">Next-Gen Interface Preview</span>
+            <div className="flex items-center gap-2 px-4 py-1 rounded-full bg-zinc-950/80 border border-zinc-800 text-[11px] text-zinc-400 font-mono">
+              <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
+              eventsphere.app/live-feed
+            </div>
+            <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+              <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+              <span className="font-semibold text-zinc-300">Live Sync</span>
+            </div>
           </div>
-          
-          {/* Decorative Corners */}
-          <div className="absolute top-6 left-6 w-12 h-12 border-t-2 border-l-2 border-primary/40 rounded-tl-xl" />
-          <div className="absolute bottom-6 right-6 w-12 h-12 border-b-2 border-r-2 border-primary/40 rounded-br-xl" />
+
+          {/* Window Body with Simulated Live Event Cards */}
+          <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-5 text-left bg-gradient-to-b from-zinc-950 via-zinc-900/40 to-zinc-950">
+            {/* Card 1 */}
+            <div className="p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/70 hover:border-yellow-400/50 transition-all flex flex-col justify-between group/card">
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">
+                    Tech Summit
+                  </span>
+                  <span className="text-xs text-zinc-400">Today, 5:00 PM</span>
+                </div>
+                <h4 className="text-base font-bold text-zinc-100 group-hover/card:text-yellow-400 transition-colors">
+                  NextGen AI & Cloud Summit
+                </h4>
+                <p className="text-xs text-zinc-400 mt-1 line-clamp-2">
+                  Keynote sessions from industry leaders on agentic systems and scalable architecture.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-400">
+                <span className="flex items-center gap-1 text-zinc-300">
+                  <Users className="w-3.5 h-3.5 text-yellow-400" /> 1,420 Attendees
+                </span>
+                <span className="text-yellow-400 font-semibold">Free RSVP</span>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="p-5 rounded-2xl border border-yellow-400/30 bg-zinc-900/80 shadow-[0_0_20px_rgba(250,204,21,0.08)] flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-zinc-800 text-zinc-200 border border-zinc-700">
+                    Design Lab
+                  </span>
+                  <span className="text-xs text-yellow-400 font-semibold flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping" />
+                    Happening Now
+                  </span>
+                </div>
+                <h4 className="text-base font-bold text-zinc-100">
+                  Global UI/UX Masterclass 2026
+                </h4>
+                <p className="text-xs text-zinc-400 mt-1 line-clamp-2">
+                  Live hands-on workshop covering advanced motion design, micro-interactions, and design tokens.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-400">
+                <span className="flex items-center gap-1 text-zinc-300">
+                  <MapPin className="w-3.5 h-3.5 text-yellow-400" /> Virtual Stage 01
+                </span>
+                <span className="text-yellow-400 font-bold">$29.00</span>
+              </div>
+            </div>
+
+            {/* Card 3 */}
+            <div className="p-5 rounded-2xl border border-zinc-800/80 bg-zinc-900/70 hover:border-yellow-400/50 transition-all flex flex-col justify-between group/card">
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-yellow-400/10 text-yellow-400 border border-yellow-400/20">
+                    Founders Meet
+                  </span>
+                  <span className="text-xs text-zinc-400">Tomorrow</span>
+                </div>
+                <h4 className="text-base font-bold text-zinc-100 group-hover/card:text-yellow-400 transition-colors">
+                  Venture & Seed Networking Gala
+                </h4>
+                <p className="text-xs text-zinc-400 mt-1 line-clamp-2">
+                  Connect with early-stage angel investors, venture partners, and high-growth builders.
+                </p>
+              </div>
+              <div className="mt-4 pt-3 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-400">
+                <span className="flex items-center gap-1 text-zinc-300">
+                  <Users className="w-3.5 h-3.5 text-yellow-400" /> 350 RSVP'd
+                </span>
+                <span className="text-yellow-400 font-semibold">Limited Seats</span>
+              </div>
+            </div>
+          </div>
         </div>
       </motion.div>
     </section>

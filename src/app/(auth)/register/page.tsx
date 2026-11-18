@@ -12,73 +12,79 @@ export default function RegisterPage() {
     e.preventDefault()
     setIsLoading(true)
     
-    // Simulate API call
+    // Simulate account creation
     setTimeout(() => {
       setIsLoading(false)
       router.push("/dashboard")
-    }, 1500)
+    }, 1200)
   }
 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Create an account</h1>
-        <p className="text-sm text-muted-foreground mt-2">
-          Enter your details below to create your account.
+        <h1 className="text-2xl font-extrabold tracking-tight text-white">Create an account</h1>
+        <p className="text-xs text-zinc-400 mt-1.5">
+          Join EventSphere to discover, organize, and attend premier gatherings.
         </p>
       </div>
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium">Full Name</label>
+      <form onSubmit={onSubmit} className="flex flex-col gap-3.5">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-zinc-300">Full Name</label>
           <input
             type="text"
             placeholder="John Doe"
             required
-            className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-11 w-full rounded-xl border border-zinc-800 bg-zinc-950/80 px-4 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
           />
         </div>
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium">Email</label>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-zinc-300">Email Address</label>
           <input
             type="email"
             placeholder="name@example.com"
             required
-            className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-11 w-full rounded-xl border border-zinc-800 bg-zinc-950/80 px-4 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
           />
         </div>
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium">Password</label>
+
+        <div className="flex flex-col gap-1.5">
+          <label className="text-xs font-semibold text-zinc-300">Password</label>
           <input
             type="password"
             placeholder="••••••••"
             required
-            className="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-11 w-full rounded-xl border border-zinc-800 bg-zinc-950/80 px-4 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
           />
         </div>
 
         <button
           disabled={isLoading}
           type="submit"
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 mt-2"
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-bold transition-all focus:outline-none disabled:opacity-50 bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 text-zinc-950 hover:shadow-[0_0_25px_rgba(250,204,21,0.35)] hover:scale-[1.02] active:scale-[0.98] h-11 px-4 py-2 mt-2 shadow-lg shadow-yellow-400/20"
         >
-          {isLoading ? "Creating account..." : "Sign Up"}
+          {isLoading ? "Creating account..." : "Get Started Free"}
         </button>
       </form>
 
-      <div className="relative">
+      <div className="relative my-1">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
+          <span className="w-full border-t border-zinc-800" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="px-2 bg-background/80 backdrop-blur-md text-muted-foreground rounded-full">
+          <span className="px-2 bg-zinc-900 text-zinc-500 rounded-full">
             Or continue with
           </span>
         </div>
       </div>
 
-      <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background/50 hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
-        <svg viewBox="0 0 24 24" className="w-5 h-5 mr-2" aria-hidden="true">
+      <button
+        type="button"
+        onClick={() => router.push("/dashboard")}
+        className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-xs font-bold transition-colors border border-zinc-800 bg-zinc-950/60 hover:bg-zinc-800 text-zinc-200 h-11 px-4 py-2"
+      >
+        <svg viewBox="0 0 24 24" className="w-4 h-4 mr-2" aria-hidden="true">
           <path
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
             fill="#4285F4"
@@ -96,12 +102,12 @@ export default function RegisterPage() {
             fill="#EA4335"
           />
         </svg>
-        Google
+        Sign up with Google
       </button>
 
-      <div className="text-sm text-center text-muted-foreground mt-4">
+      <div className="text-xs text-center text-zinc-400 mt-2">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-primary hover:underline">
+        <Link href="/login" className="font-bold text-yellow-400 hover:underline">
           Sign in
         </Link>
       </div>
