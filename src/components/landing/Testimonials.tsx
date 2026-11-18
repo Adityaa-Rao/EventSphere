@@ -1,91 +1,74 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "framer-motion"
-import { Star, Quote, Sparkles } from "lucide-react"
+import { Star, Sparkles } from "lucide-react"
 
 const testimonials = [
   {
-    quote:
-      "EventSphere transformed how our design community runs international summits. The RSVP flow and seamless timezone conversions are unmatched.",
+    quote: "Gate check-in times dropped to under two seconds per attendee with zero mobile app installs needed. Clean, fast, and completely reliable.",
     author: "Elena Rostova",
-    role: "Head of Community at PixelCraft",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
-    rating: 5,
+    role: "Lead Curator, PixelCraft Design Salon",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80",
   },
   {
-    quote:
-      "We hosted 3,000+ developers across 14 countries. Ticketing was instantaneous, zero server lag, and our attendees loved the sleek interface.",
+    quote: "Handled our 2,500-person engineering summit without a hitch. The drag-and-drop agenda coordination and automatic timezone sync saved our team dozens of hours.",
     author: "Marcus Vance",
-    role: "Founder & CTO at CloudPulse",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80",
-    rating: 5,
+    role: "Co-Founder, CloudPulse Summit",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80",
   },
   {
-    quote:
-      "The best event management tool I have used in 10 years. Beautiful dark mode, ultra-fast check-in QR codes, and phenomenal organizer analytics.",
+    quote: "Our attendees loved having clean digital QR passes directly in their browser and calendar without being forced through promotional marketing funnels.",
     author: "Sarah Lin",
-    role: "Event Director at Nexus Summits",
-    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&q=80",
-    rating: 5,
+    role: "Director of Programs, TechNordic",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&auto=format&fit=crop&q=80",
   },
 ]
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="py-28 px-4 mx-auto max-w-7xl relative">
+    <section id="testimonials" className="py-24 px-4 mx-auto max-w-7xl">
       <div className="text-center mb-16">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 mb-4 text-xs font-bold uppercase tracking-wider rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400">
+        <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 text-xs font-bold uppercase tracking-wider rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Real Community Feedback</span>
+          <span>Operator Perspectives</span>
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
-          Loved by <span className="text-gradient">Creators & Attendees</span>
+          Trusted by <span className="text-gradient">Independent Organizers</span>
         </h2>
-        <p className="mt-3 text-zinc-400 max-w-xl mx-auto text-base">
-          See why top companies, meetups, and creators choose EventSphere for their flagship experiences.
+        <p className="mt-2 text-zinc-400 max-w-lg mx-auto text-sm sm:text-base">
+          Proven across technical summits, intimate executive salons, and international festivals.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {testimonials.map((item, index) => (
-          <motion.div
+          <div
             key={index}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="p-8 rounded-3xl border border-zinc-800 bg-zinc-900/60 backdrop-blur-xl hover:border-yellow-400/40 hover:shadow-[0_0_30px_rgba(250,204,21,0.08)] transition-all duration-300 flex flex-col justify-between group"
+            className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 hover:border-zinc-700 transition-colors flex flex-col justify-between"
           >
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: item.rating }).map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <Quote className="w-8 h-8 text-zinc-700 group-hover:text-yellow-400/30 transition-colors" />
+              <div className="flex items-center gap-1 mb-4 text-yellow-400">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="w-3.5 h-3.5 fill-yellow-400" />
+                ))}
               </div>
-
-              <p className="text-zinc-300 text-base leading-relaxed italic mb-8">
+              <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed mb-6 font-normal">
                 "{item.quote}"
               </p>
             </div>
 
-            <div className="flex items-center gap-4 pt-6 border-t border-zinc-800/80">
+            <div className="flex items-center gap-3 pt-4 border-t border-zinc-850">
               <img
                 src={item.avatar}
                 alt={item.author}
-                className="w-12 h-12 rounded-full object-cover border border-zinc-700"
+                className="w-10 h-10 rounded-full object-cover border border-zinc-700"
               />
               <div>
-                <h4 className="text-sm font-bold text-zinc-100 group-hover:text-yellow-400 transition-colors">
-                  {item.author}
-                </h4>
-                <p className="text-xs text-zinc-400">{item.role}</p>
+                <h4 className="text-xs font-bold text-white">{item.author}</h4>
+                <p className="text-[11px] text-zinc-400">{item.role}</p>
               </div>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </section>

@@ -3,7 +3,8 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { CalendarDays, Home, Compass, Calendar, Settings, LogOut, Plus, Bell, Menu, X } from "lucide-react"
+import { CalendarDays, Home, Compass, Calendar, Settings, LogOut, Plus, Menu, X } from "lucide-react"
+import { NotificationsPopover } from "@/components/notifications-popover"
 
 export default function DashboardLayout({
   children,
@@ -93,10 +94,7 @@ export default function DashboardLayout({
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4">
-            <button className="relative p-2.5 text-zinc-400 transition-colors rounded-xl bg-zinc-900 border border-zinc-800 hover:text-yellow-400 hover:border-yellow-400/30">
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-            </button>
+            <NotificationsPopover />
 
             <Link
               href="/events/create"

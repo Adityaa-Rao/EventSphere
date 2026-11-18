@@ -1,98 +1,242 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Image as ImageIcon, Calendar as CalendarIcon, MapPin, Clock, Tag, Sparkles, Check, DollarSign } from "lucide-react"
+import { ArrowLeft, Upload, Image as ImageIcon, Calendar as CalendarIcon, MapPin, Clock, Tag, Check, DollarSign, X, Sparkles } from "lucide-react"
+import { saveNewEvent } from "@/lib/events-store"
+
+const PRESET_BANNERS = [
+  { name: "Tech / Cyber", url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&auto=format&fit=crop&q=80" },
+  { name: "Design Studio", url: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&auto=format&fit=crop&q=80" },
+  { name: "Executive Salon", url: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=1200&auto=format&fit=crop&q=80" },
+  { name: "Live Stage", url: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1200&auto=format&fit=crop&q=80" },
+]
 
 export default function CreateEventPage() {
   const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = React.useState(false)
-  const [success, setSuccess] = React.useState(false)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
+
   const [title, setTitle] = React.useState("")
   const [description, setDescription] = React.useState("")
   const [date, setDate] = React.useState("")
   const [time, setTime] = React.useState("")
   const [location, setLocation] = React.useState("")
-  const [category, setCategory] = React.useState("Tech")
-  const [price, setPrice] = React.useState("0")
+  const [category, setCategory] = React.useState<"Tech" | "Design" | "Founders" | "Music" | "Community">("Tech")
+  const [price, setPrice] = React.useState("Free")
+  const [capacity, setCapacity] = React.useState("150")
+
+  // Photo state
+  const [coverImage, setCoverImage] = React.useState<string>(PRESET_BANNERS[0].url)
+  const [imageFileName, setImageFileName] = React.useState<string>("")
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+  const [success, setSuccess] = React.useState(false)
+  const [errorMsg, setErrorMsg] = React.useState("")
+
+  // Handle local file upload
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith("image/")) {
+      setErrorMsg("Please select a valid image file (PNG, JPG, WebP).")
+      return
+    }
+
+    // Limit to 5MB
+    if (file.size > 5 * 1024 * 1024) {
+      setErrorMsg("Image size exceeds 5MB limit. Please choose a smaller image.")
+      return
+    }
+
+    setErrorMsg("")
+    setImageFileName(file.name)
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      if (typeof event.target?.result === "string") {
+        setCoverImage(event.target.result)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleSelectPreset = (url: string) => {
+    setCoverImage(url)
+    setImageFileName("")
+    setErrorMsg("")
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    setErrorMsg("")
+
+    if (!title.trim()) {
+      setErrorMsg("Please provide an event title.")
+      return
+    }
+    if (!date) {
+      setErrorMsg("Please select a date for the event.")
+      return
+    }
+    if (!location.trim()) {
+      setErrorMsg("Please enter an event venue or virtual link.")
+      return
+    }
+
     setIsSubmitting(true)
 
-    // Simulate publication
-    setTimeout(() => {
-      setIsSubmitting(false)
+    try {
+      // Actually save the event in persistent store
+      saveNewEvent({
+        title,
+        description: description || "No detailed description provided.",
+        category,
+        date,
+        time: time || "10:00 AM",
+        location,
+        image: coverImage || PRESET_BANNERS[0].url,
+        price,
+        capacity: parseInt(capacity, 10) || 150,
+      })
+
       setSuccess(true)
+      setIsSubmitting(false)
+
+      // Redirect to events catalog where the new event is visible
       setTimeout(() => {
         router.push("/events")
-      }, 1500)
-    }, 1000)
+      }, 1000)
+    } catch (err) {
+      setIsSubmitting(false)
+      setErrorMsg("Failed to save event. Please check your storage settings.")
+    }
   }
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-yellow-400 selection:text-zinc-950">
-      {/* Top Navbar */}
-      <header className="flex items-center h-20 px-6 sm:px-8 border-b border-zinc-800 bg-zinc-950/70 backdrop-blur-xl sticky top-0 z-20">
-        <div className="flex items-center justify-between max-w-4xl mx-auto w-full">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/dashboard"
-              className="p-2 -ml-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-900 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Link>
-            <div>
-              <h1 className="text-lg sm:text-xl font-bold text-white">Create New Event</h1>
-              <p className="text-xs text-zinc-400">Publish your gathering on EventSphere</p>
-            </div>
-          </div>
+      {/* Top Bar */}
+      <header className="h-16 px-6 border-b border-zinc-850 bg-zinc-950/80 backdrop-blur-xl sticky top-0 z-30 flex items-center justify-between">
+        <div className="max-w-4xl mx-auto w-full flex items-center justify-between">
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back to Catalog
+          </Link>
 
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-            <span className="text-xs text-zinc-400 font-medium hidden sm:inline">Draft auto-saved</span>
+            <span className="text-[11px] text-zinc-400 font-mono">Live Event Publisher</span>
           </div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto py-12 px-6 sm:px-8">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-10">
-          {/* Cover Image Upload */}
-          <motion.section
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col gap-3"
-          >
-            <label className="text-sm font-bold text-zinc-200 flex items-center gap-2">
-              <ImageIcon className="w-4 h-4 text-yellow-400" /> Event Cover Banner
-            </label>
-            <div className="w-full aspect-[21/9] rounded-3xl border-2 border-dashed border-zinc-800 flex flex-col items-center justify-center bg-zinc-900/40 hover:bg-zinc-900/70 hover:border-yellow-400/50 transition-all cursor-pointer group overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-t from-yellow-400/5 to-transparent pointer-events-none" />
-              <div className="w-14 h-14 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-yellow-400 group-hover:scale-110 transition-transform mb-3 shadow-md">
-                <ImageIcon className="w-7 h-7" />
+      <main className="max-w-4xl mx-auto py-10 px-4 sm:px-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-extrabold tracking-tight text-white">Create New Event</h1>
+          <p className="text-zinc-400 text-sm mt-1">
+            Fill in the details below. Once published, your event will immediately appear on the public catalog and your organizer dashboard.
+          </p>
+        </div>
+
+        {errorMsg && (
+          <div className="mb-6 p-4 rounded-xl border border-red-500/30 bg-red-500/10 text-red-300 text-xs flex items-center justify-between">
+            <span>{errorMsg}</span>
+            <button onClick={() => setErrorMsg("")} className="text-red-400 hover:text-red-200">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+          {/* Cover Photo Upload Section */}
+          <section className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/40">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4 text-yellow-400" /> Event Cover Photo
+                </h2>
+                <p className="text-xs text-zinc-400 mt-0.5">
+                  Upload an image from your device or pick a curated architectural preset.
+                </p>
               </div>
-              <p className="font-bold text-base text-zinc-200 group-hover:text-yellow-400 transition-colors">
-                Upload Cover Artwork
-              </p>
-              <p className="text-xs text-zinc-500 mt-1">16:9 ratio recommended (1920x1080). PNG or JPG.</p>
-            </div>
-          </motion.section>
-
-          {/* Event Details */}
-          <motion.section
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="p-8 rounded-3xl border border-zinc-800 bg-zinc-900/50 backdrop-blur-xl flex flex-col gap-6"
-          >
-            <div className="flex items-center gap-2 pb-4 border-b border-zinc-800">
-              <Sparkles className="w-4 h-4 text-yellow-400" />
-              <h2 className="text-lg font-bold text-white">General Information</h2>
+              {imageFileName && (
+                <span className="text-[11px] text-yellow-400 bg-yellow-400/10 px-2.5 py-1 rounded-full border border-yellow-400/30 font-medium truncate max-w-[200px]">
+                  {imageFileName}
+                </span>
+              )}
             </div>
 
-            <div className="flex flex-col gap-2">
+            {/* Active Banner Preview with Upload Trigger */}
+            <div className="relative aspect-[21/9] w-full rounded-xl border border-zinc-700/80 overflow-hidden bg-zinc-950 group">
+              <img
+                src={coverImage}
+                alt="Event Cover Preview"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent flex flex-col justify-end p-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-xs text-zinc-300 font-medium">
+                    Recommended resolution: 1920×1080 (16:9 or 21:9)
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileChange}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-zinc-950 text-xs font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95"
+                    >
+                      <Upload className="w-3.5 h-3.5 stroke-[2.5]" />
+                      Upload from Device
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Presets */}
+            <div className="mt-4 pt-4 border-t border-zinc-800/80">
+              <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block mb-2.5">
+                Or select an instant theme preset:
+              </span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {PRESET_BANNERS.map((preset) => (
+                  <button
+                    key={preset.name}
+                    type="button"
+                    onClick={() => handleSelectPreset(preset.url)}
+                    className={`relative rounded-lg overflow-hidden border p-1 text-left transition-all ${
+                      coverImage === preset.url
+                        ? "border-yellow-400 ring-1 ring-yellow-400/50 bg-zinc-850"
+                        : "border-zinc-800 bg-zinc-900 hover:border-zinc-700"
+                    }`}
+                  >
+                    <div className="aspect-video w-full rounded overflow-hidden mb-1.5">
+                      <img src={preset.url} alt={preset.name} className="w-full h-full object-cover" />
+                    </div>
+                    <span className="text-[11px] font-semibold text-zinc-300 px-1 truncate block">
+                      {preset.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Event Essentials */}
+          <section className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 flex flex-col gap-5">
+            <h2 className="text-sm font-bold text-white uppercase tracking-wider text-zinc-300">
+              General Information
+            </h2>
+
+            <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-zinc-300">Event Title *</label>
               <input
                 type="text"
@@ -100,97 +244,19 @@ export default function CreateEventPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. NextGen Web & AI Developer Summit 2026"
-                className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
               />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-semibold text-zinc-300">Description *</label>
-              <textarea
-                rows={5}
-                required
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Describe your event, speaker schedule, agenda, and expectations..."
-                className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors resize-none"
-              />
-            </div>
-          </motion.section>
-
-          {/* Date, Time, Venue */}
-          <motion.section
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="p-8 rounded-3xl border border-zinc-800 bg-zinc-900/50 backdrop-blur-xl flex flex-col gap-6"
-          >
-            <div className="flex items-center gap-2 pb-4 border-b border-zinc-800">
-              <CalendarIcon className="w-4 h-4 text-yellow-400" />
-              <h2 className="text-lg font-bold text-white">When & Where</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
-                  <CalendarIcon className="w-3.5 h-3.5 text-yellow-400" /> Event Date *
+                  <Tag className="w-3.5 h-3.5 text-yellow-400" /> Category
                 </label>
-                <input
-                  type="date"
-                  required
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-yellow-400" /> Start Time *
-                </label>
-                <input
-                  type="time"
-                  required
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-yellow-400" /> Location / Stream URL *
-              </label>
-              <input
-                type="text"
-                required
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="e.g. Moscone Center, San Francisco or Virtual Zoom Stream"
-                className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
-              />
-            </div>
-          </motion.section>
-
-          {/* Category & Pricing */}
-          <motion.section
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="p-8 rounded-3xl border border-zinc-800 bg-zinc-900/50 backdrop-blur-xl flex flex-col gap-6"
-          >
-            <div className="flex items-center gap-2 pb-4 border-b border-zinc-800">
-              <Tag className="w-4 h-4 text-yellow-400" />
-              <h2 className="text-lg font-bold text-white">Ticketing & Category</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-2">
-                <label className="text-xs font-semibold text-zinc-300">Category</label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
+                  onChange={(e) => setCategory(e.target.value as any)}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
                 >
                   <option value="Tech">Tech</option>
                   <option value="Design">Design</option>
@@ -200,45 +266,117 @@ export default function CreateEventPage() {
                 </select>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1">
-                  <DollarSign className="w-3.5 h-3.5 text-yellow-400" /> Ticket Price ($ USD)
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+                  <DollarSign className="w-3.5 h-3.5 text-yellow-400" /> Ticket Pricing
                 </label>
                 <input
-                  type="number"
-                  min="0"
-                  step="1"
+                  type="text"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  placeholder="0 for Free event"
-                  className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+                  placeholder="Free or $49"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
                 />
               </div>
             </div>
-          </motion.section>
 
-          {/* Submission Bar */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-zinc-300">Description</label>
+              <textarea
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Give attendees a clear agenda, keynotes, prerequisites, and what to expect..."
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors resize-none"
+              />
+            </div>
+          </section>
+
+          {/* Date & Location */}
+          <section className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 flex flex-col gap-5">
+            <h2 className="text-sm font-bold text-white uppercase tracking-wider text-zinc-300">
+              Date & Location
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+                  <CalendarIcon className="w-3.5 h-3.5 text-yellow-400" /> Date *
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-yellow-400" /> Start Time
+                </label>
+                <input
+                  type="text"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  placeholder="e.g. 10:00 AM PST"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-zinc-300">Max Capacity</label>
+                <input
+                  type="number"
+                  min="10"
+                  value={capacity}
+                  onChange={(e) => setCapacity(e.target.value)}
+                  placeholder="150"
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-yellow-400" /> Venue Address or Livestream URL *
+              </label>
+              <input
+                type="text"
+                required
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="e.g. 101 California St, San Francisco, CA or https://zoom.us/j/..."
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+              />
+            </div>
+          </section>
+
+          {/* Action Row */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-zinc-800">
             <Link
-              href="/dashboard"
+              href="/events"
               className="text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
             >
               Cancel and Return
             </Link>
 
-            <div className="flex items-center gap-4 w-full sm:w-auto">
-              {success && (
-                <span className="flex items-center gap-1.5 text-xs text-yellow-400 font-bold">
-                  <Check className="w-4 h-4" /> Event published! Redirecting...
-                </span>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              {success ? (
+                <div className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
+                  <Check className="w-4 h-4" /> Published! Redirecting to catalog...
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full sm:w-auto px-7 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+                >
+                  <Sparkles className="w-4 h-4 fill-zinc-950" />
+                  {isSubmitting ? "Saving to Catalog..." : "Publish Event Live"}
+                </button>
               )}
-              <button
-                type="submit"
-                disabled={isSubmitting || success}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 text-zinc-950 font-bold text-sm shadow-xl shadow-yellow-400/20 hover:scale-105 active:scale-95 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? "Publishing Event..." : "Publish Event Now"}
-              </button>
             </div>
           </div>
         </form>
