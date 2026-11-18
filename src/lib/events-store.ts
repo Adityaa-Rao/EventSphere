@@ -329,6 +329,33 @@ export function clearAllNotifications(): void {
   }
 }
 
+export function deleteEvent(eventId: string): void {
+  const current = getStoredEvents()
+  const target = current.find((e) => e.id === eventId)
+  const updated = current.filter((e) => e.id !== eventId)
+
+  if (typeof window !== "undefined") {
+    localStorage.setItem(EVENTS_KEY, JSON.stringify(updated))
+
+    // Clean up RSVPs
+    const rsvps = getStoredRsvps()
+    if (rsvps[eventId]) {
+      delete rsvps[eventId]
+      localStorage.setItem(RSVPS_KEY, JSON.stringify(rsvps))
+    }
+
+    if (target) {
+      addNotification({
+        title: "Event Removed",
+        message: `"${target.title}" has been deleted from your event catalog.`,
+        type: "system",
+      })
+    }
+
+    window.dispatchEvent(new Event("eventsphere_storage_update"))
+  }
+}
+
 // React Hook for Reactive Event Updates
 export function useEvents() {
   const [events, setEvents] = useState<EventItem[]>([])
@@ -352,7 +379,7 @@ export function useEvents() {
     }
   }, [reload])
 
-  return { events, rsvps, loaded, reload, toggleRsvp: toggleRsvpStatus }
+  return { events, rsvps, loaded, reload, toggleRsvp: toggleRsvpStatus, removeEvent: deleteEvent }
 }
 
 // React Hook for Notifications

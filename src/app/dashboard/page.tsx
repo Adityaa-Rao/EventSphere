@@ -2,11 +2,11 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Calendar, Users, Star, TrendingUp, MapPin, Clock, ArrowRight, Plus, Sparkles, Check } from "lucide-react"
-import { useEvents } from "@/lib/events-store"
+import { Calendar, Users, Star, TrendingUp, MapPin, Clock, ArrowRight, Plus, Sparkles, Check, Trash2 } from "lucide-react"
+import { useEvents, EventItem } from "@/lib/events-store"
 
 export default function DashboardOverview() {
-  const { events, rsvps, loaded, toggleRsvp } = useEvents()
+  const { events, rsvps, loaded, toggleRsvp, removeEvent } = useEvents()
 
   const userEvents = events.filter((e) => e.isUserCreated)
   const totalRsvpsCount = events.reduce((acc, e) => acc + (e.attendees || 0), 0)
@@ -18,8 +18,15 @@ export default function DashboardOverview() {
     { name: "Catalog Reach", value: "24.2k", icon: TrendingUp, trend: "+8.4% vs last week" },
   ]
 
-  // Display user's created events first, then upcoming general events
   const displayedUpcoming = userEvents.length > 0 ? userEvents.concat(events.filter((e) => !e.isUserCreated).slice(0, 3 - userEvents.length)) : events.slice(0, 3)
+
+  const handleDelete = (event: EventItem, e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (window.confirm(`Are you sure you want to remove "${event.title}" from your hosted events?`)) {
+      removeEvent(event.id)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-8 max-w-6xl mx-auto pb-16">
@@ -148,16 +155,28 @@ export default function DashboardOverview() {
                     <Users className="w-3 h-3 text-yellow-400" /> {event.attendees} Attending
                   </span>
 
-                  <button
-                    onClick={() => toggleRsvp(event.id)}
-                    className={`px-3 py-1 rounded-md text-[11px] font-bold transition-all ${
-                      isRsvpd
-                        ? "bg-zinc-800 text-yellow-400 border border-yellow-400/30"
-                        : "bg-yellow-400 text-zinc-950 hover:bg-yellow-300"
-                    }`}
-                  >
-                    {isRsvpd ? "Confirmed" : "RSVP"}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {event.isUserCreated && (
+                      <button
+                        onClick={(e) => handleDelete(event, e)}
+                        className="p-1.5 rounded-md text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                        title="Remove event"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+
+                    <button
+                      onClick={() => toggleRsvp(event.id)}
+                      className={`px-3 py-1 rounded-md text-[11px] font-bold transition-all ${
+                        isRsvpd
+                          ? "bg-zinc-800 text-yellow-400 border border-yellow-400/30"
+                          : "bg-yellow-400 text-zinc-950 hover:bg-yellow-300"
+                      }`}
+                    >
+                      {isRsvpd ? "Confirmed" : "RSVP"}
+                    </button>
+                  </div>
                 </div>
               </div>
             )

@@ -5,17 +5,18 @@ import Link from "next/link"
 import { Navbar } from "@/components/landing/Navbar"
 import { Footer } from "@/components/landing/Footer"
 import { useEvents, EventItem } from "@/lib/events-store"
-import { Calendar, Clock, MapPin, Users, Plus, Search, Filter, Check, ArrowLeft, Tag, QrCode, ExternalLink, X, Sparkles, User, Share2 } from "lucide-react"
+import { UniqueQrCode } from "@/components/unique-qr-code"
+import { Calendar, Clock, MapPin, Users, Plus, Search, Filter, Check, ArrowLeft, Tag, QrCode, ExternalLink, X, Sparkles, User, Share2, Trash2 } from "lucide-react"
 
 export default function EventsDiscoveryPage() {
-  const { events, rsvps, loaded, toggleRsvp } = useEvents()
+  const { events, rsvps, loaded, toggleRsvp, removeEvent } = useEvents()
 
   const [selectedCategory, setSelectedCategory] = React.useState<string>("All")
   const [scopeFilter, setScopeFilter] = React.useState<"all" | "mine" | "rsvpd">("all")
   const [searchQuery, setSearchQuery] = React.useState("")
   const [priceFilter, setPriceFilter] = React.useState<"All" | "Free" | "Paid">("All")
   const [activeModalEvent, setActiveModalEvent] = React.useState<EventItem | null>(null)
-  const [shareNotice, setShareNotice] = React.useState(false)
+  const [toastMessage, setToastMessage] = React.useState<string | null>(null)
 
   const categories = ["All", "Tech", "Design", "Founders", "Music", "Community"]
   const priceOptions: ("All" | "Free" | "Paid")[] = ["All", "Free", "Paid"]
@@ -53,8 +54,21 @@ export default function EventsDiscoveryPage() {
   const handleShare = (event: EventItem) => {
     if (navigator?.clipboard) {
       navigator.clipboard.writeText(`${window.location.origin}/events?id=${event.id}`)
-      setShareNotice(true)
-      setTimeout(() => setShareNotice(false), 2500)
+      setToastMessage("Event link copied to clipboard!")
+      setTimeout(() => setToastMessage(null), 2500)
+    }
+  }
+
+  const handleDelete = (event: EventItem, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation()
+    const confirmDelete = window.confirm(`Are you sure you want to remove "${event.title}" from the catalog?`)
+    if (confirmDelete) {
+      removeEvent(event.id)
+      if (activeModalEvent?.id === event.id) {
+        setActiveModalEvent(null)
+      }
+      setToastMessage(`"${event.title}" has been removed.`)
+      setTimeout(() => setToastMessage(null), 3000)
     }
   }
 
@@ -192,15 +206,15 @@ export default function EventsDiscoveryPage() {
           </div>
         </div>
 
-        {/* Counter */}
+        {/* Counter & Toast Notice */}
         <div className="mb-6 flex items-center justify-between text-xs text-zinc-400">
           <span>
             Displaying <strong className="text-white">{filteredEvents.length}</strong> events
             {selectedCategory !== "All" && ` in ${selectedCategory}`}
           </span>
-          {shareNotice && (
-            <span className="text-yellow-400 font-bold animate-in fade-in">
-              Event link copied to clipboard!
+          {toastMessage && (
+            <span className="text-yellow-400 font-bold bg-yellow-400/10 px-3 py-1 rounded-full border border-yellow-400/20 animate-in fade-in">
+              {toastMessage}
             </span>
           )}
         </div>
@@ -312,7 +326,18 @@ export default function EventsDiscoveryPage() {
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      {/* Delete option for user-created events */}
+                      {event.isUserCreated && (
+                        <button
+                          onClick={(e) => handleDelete(event, e)}
+                          className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                          title="Remove this event"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+
                       <button
                         onClick={() => handleShare(event)}
                         className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
@@ -346,10 +371,10 @@ export default function EventsDiscoveryPage() {
         )}
       </main>
 
-      {/* Event Details & Digital Pass Modal */}
+      {/* Event Details & Unique QR Digital Pass Modal */}
       {activeModalEvent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in-50">
-          <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in-50">
+          <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-850 bg-zinc-950 p-6 shadow-2xl">
             <button
               onClick={() => setActiveModalEvent(null)}
               className="absolute top-4 right-4 p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white"
@@ -367,6 +392,11 @@ export default function EventsDiscoveryPage() {
               <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-zinc-950/90 text-yellow-400 border border-yellow-400/30">
                 {activeModalEvent.category}
               </span>
+              {activeModalEvent.isUserCreated && (
+                <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-yellow-400 text-zinc-950">
+                  Created by You
+                </span>
+              )}
             </div>
 
             <div className="flex items-center gap-2 text-xs text-zinc-400 mb-2">
@@ -374,16 +404,16 @@ export default function EventsDiscoveryPage() {
               <span>Organized by <strong className="text-zinc-200">{activeModalEvent.organizer}</strong></span>
             </div>
 
-            <h2 className="text-xl font-bold text-white mb-3">
+            <h2 className="text-xl font-bold text-white mb-2">
               {activeModalEvent.title}
             </h2>
 
-            <p className="text-xs text-zinc-400 leading-relaxed mb-6">
+            <p className="text-xs text-zinc-400 leading-relaxed mb-5">
               {activeModalEvent.description}
             </p>
 
             {/* Logistics Grid */}
-            <div className="grid grid-cols-2 gap-3 p-4 rounded-xl border border-zinc-850 bg-zinc-900/60 text-xs mb-6">
+            <div className="grid grid-cols-2 gap-3 p-4 rounded-xl border border-zinc-850 bg-zinc-900/60 text-xs mb-5">
               <div>
                 <span className="text-zinc-500 block mb-0.5">Date & Time</span>
                 <span className="text-zinc-200 font-semibold">{activeModalEvent.date} • {activeModalEvent.time}</span>
@@ -404,50 +434,63 @@ export default function EventsDiscoveryPage() {
               </div>
             </div>
 
-            {/* Digital Pass / QR Simulation */}
-            <div className="p-4 rounded-xl border border-zinc-850 bg-zinc-900/40 flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-zinc-950 border border-zinc-800 flex items-center justify-center text-yellow-400">
-                  <QrCode className="w-7 h-7" />
-                </div>
-                <div>
-                  <span className="text-xs font-bold text-white block">Digital Gate Pass</span>
-                  <span className="text-[11px] text-zinc-400">
-                    {rsvps[activeModalEvent.id]
-                      ? "Pass active • Valid for entry"
-                      : "RSVP below to generate pass"}
-                  </span>
-                </div>
+            {/* UNIQUE QR CODE PASS CONTAINER */}
+            <div className="mb-6 flex flex-col items-center">
+              <div className="w-full flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <QrCode className="w-4 h-4 text-yellow-400" /> Unique Event Pass
+                </span>
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                  rsvps[activeModalEvent.id]
+                    ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
+                    : "bg-zinc-800 text-zinc-400"
+                }`}>
+                  {rsvps[activeModalEvent.id] ? "Pass Valid" : "Unreserved"}
+                </span>
               </div>
 
-              <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${
-                rsvps[activeModalEvent.id]
-                  ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
-                  : "bg-zinc-800 text-zinc-400"
-              }`}>
-                {rsvps[activeModalEvent.id] ? "Pass Valid" : "Unreserved"}
-              </span>
+              {/* Render unique generated QR code specifically for this event */}
+              <UniqueQrCode
+                eventId={activeModalEvent.id}
+                eventTitle={activeModalEvent.title}
+                size={160}
+              />
             </div>
 
             {/* Action Bar */}
-            <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-850">
-              <button
-                onClick={() => handleShare(activeModalEvent)}
-                className="px-4 py-2.5 rounded-xl border border-zinc-800 text-xs font-bold text-zinc-300 hover:text-white hover:bg-zinc-850"
-              >
-                Copy Link
-              </button>
+            <div className="flex items-center justify-between gap-3 pt-3 border-t border-zinc-850">
+              {/* Remove button if user created */}
+              {activeModalEvent.isUserCreated ? (
+                <button
+                  onClick={() => handleDelete(activeModalEvent)}
+                  className="px-3.5 py-2 rounded-xl border border-red-500/30 bg-red-500/10 text-xs font-bold text-red-400 hover:bg-red-500/20 flex items-center gap-1.5 transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Remove Event
+                </button>
+              ) : (
+                <div />
+              )}
 
-              <button
-                onClick={() => toggleRsvp(activeModalEvent.id)}
-                className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all ${
-                  rsvps[activeModalEvent.id]
-                    ? "bg-zinc-800 text-yellow-400 border border-yellow-400/30"
-                    : "bg-yellow-400 text-zinc-950 hover:bg-yellow-300 shadow-md"
-                }`}
-              >
-                {rsvps[activeModalEvent.id] ? "Cancel RSVP" : "Confirm My RSVP"}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleShare(activeModalEvent)}
+                  className="px-4 py-2.5 rounded-xl border border-zinc-800 text-xs font-bold text-zinc-300 hover:text-white hover:bg-zinc-850"
+                >
+                  Copy Link
+                </button>
+
+                <button
+                  onClick={() => toggleRsvp(activeModalEvent.id)}
+                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                    rsvps[activeModalEvent.id]
+                      ? "bg-zinc-800 text-yellow-400 border border-yellow-400/30"
+                      : "bg-yellow-400 text-zinc-950 hover:bg-yellow-300 shadow-md"
+                  }`}
+                >
+                  {rsvps[activeModalEvent.id] ? "Cancel RSVP" : "Confirm My RSVP"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
