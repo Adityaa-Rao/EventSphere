@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db";
 import authRoutes from "./api/routes/auth.routes";
+import eventRoutes from "./api/routes/event.routes";
 
 dotenv.config();
 
@@ -18,6 +19,11 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/events", eventRoutes);
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "healthy", timestamp: new Date().toISOString() });
+});
 
 app.get("/", (req, res) => {
   res.send("EventSphere API is running...");
@@ -26,3 +32,4 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
