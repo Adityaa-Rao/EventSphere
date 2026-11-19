@@ -131,13 +131,13 @@ export default function CreateEventPage() {
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-yellow-400 selection:text-zinc-950">
       {/* Top Bar */}
-      <header className="h-16 px-6 border-b border-zinc-850 bg-zinc-950/80 backdrop-blur-xl sticky top-0 z-30 flex items-center justify-between">
+      <header className="h-16 px-6 border-b border-white/[0.08] bg-zinc-950/80 backdrop-blur-xl sticky top-0 z-30 flex items-center justify-between">
         <div className="max-w-4xl mx-auto w-full flex items-center justify-between">
           <Link
             href="/events"
             className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" /> Back to Catalog
+            <ArrowLeft className="w-4 h-4 text-yellow-400" /> Back to Catalog
           </Link>
 
           <div className="flex items-center gap-2">
@@ -164,9 +164,9 @@ export default function CreateEventPage() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* Cover Photo Upload Section */}
-          <section className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/40">
+          <section className="p-6 rounded-2xl border border-white/[0.08] bg-zinc-900/40 backdrop-blur-md">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-sm font-bold text-white flex items-center gap-2">
@@ -187,7 +187,7 @@ export default function CreateEventPage() {
                   <button
                     type="button"
                     onClick={handleRemoveCustomPhoto}
-                    className="p-1.5 rounded-lg border border-zinc-800 text-zinc-400 hover:text-red-400 hover:bg-zinc-800 transition-colors"
+                    className="p-1.5 rounded-lg border border-white/[0.08] text-zinc-400 hover:text-red-400 hover:bg-white/[0.05] transition-colors"
                     title="Remove custom photo and use preset"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -197,7 +197,7 @@ export default function CreateEventPage() {
             </div>
 
             {/* Active Banner Preview with Upload Action */}
-            <div className="relative aspect-[21/9] w-full rounded-xl border border-zinc-700/80 overflow-hidden bg-zinc-950 group">
+            <div className="relative aspect-[21/9] w-full rounded-xl border border-white/[0.10] overflow-hidden bg-zinc-950 group">
               <img
                 src={coverImage}
                 alt="Event Cover Preview"
@@ -220,7 +220,7 @@ export default function CreateEventPage() {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-zinc-950 text-xs font-bold transition-all flex items-center gap-1.5 shadow-md active:scale-95"
+                      className="px-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-300 text-zinc-950 text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-95"
                     >
                       <Upload className="w-3.5 h-3.5 stroke-[2.5]" />
                       {isCustomUpload ? "Change Custom Photo" : "Upload from Device"}
@@ -232,7 +232,7 @@ export default function CreateEventPage() {
 
             {/* Starter Presets: Disabled/Hidden when custom photo is active so it never overwrites! */}
             {!isCustomUpload ? (
-              <div className="mt-4 pt-4 border-t border-zinc-800/80">
+              <div className="mt-4 pt-4 border-t border-white/[0.06]">
                 <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-wider block mb-2.5">
                   Or select an instant starter banner:
                 </span>
@@ -244,8 +244,8 @@ export default function CreateEventPage() {
                       onClick={() => handleSelectPreset(preset.url)}
                       className={`relative rounded-lg overflow-hidden border p-1 text-left transition-all ${
                         coverImage === preset.url
-                          ? "border-yellow-400 ring-1 ring-yellow-400/50 bg-zinc-850"
-                          : "border-zinc-800 bg-zinc-900 hover:border-zinc-750"
+                          ? "border-yellow-400 ring-1 ring-yellow-400/50 bg-zinc-800/80"
+                          : "border-white/[0.08] bg-zinc-900 hover:border-white/[0.18]"
                       }`}
                     >
                       <div className="aspect-video w-full rounded overflow-hidden mb-1.5">
@@ -273,8 +273,8 @@ export default function CreateEventPage() {
           </section>
 
           {/* Event Essentials */}
-          <section className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 flex flex-col gap-5">
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider text-zinc-300">
+          <section className="p-6 rounded-2xl border border-white/[0.08] bg-zinc-900/40 backdrop-blur-md flex flex-col gap-4">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-300">
               General Information
             </h2>
 
@@ -286,7 +286,7 @@ export default function CreateEventPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. NextGen Web & AI Developer Summit 2026"
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+                className="w-full bg-zinc-950/80 border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
               />
             </div>
 
@@ -297,8 +297,8 @@ export default function CreateEventPage() {
                 </label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as any)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
+                  onChange={(e) => setCategory(e.target.value as "Tech" | "Design" | "Founders" | "Music" | "Community")}
+                  className="w-full bg-zinc-950/80 border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
                 >
                   <option value="Tech">Tech</option>
                   <option value="Design">Design</option>
@@ -320,7 +320,7 @@ export default function CreateEventPage() {
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   placeholder="Free or $49"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+                  className="w-full bg-zinc-950/80 border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
                 />
               </div>
             </div>
@@ -332,14 +332,14 @@ export default function CreateEventPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Give attendees a clear agenda, keynotes, prerequisites, and what to expect..."
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors resize-none"
+                className="w-full bg-zinc-950/80 border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors resize-none"
               />
             </div>
           </section>
 
           {/* Date & Location */}
-          <section className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 flex flex-col gap-5">
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider text-zinc-300">
+          <section className="p-6 rounded-2xl border border-white/[0.08] bg-zinc-900/40 backdrop-blur-md flex flex-col gap-4">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-300">
               Date & Location
             </h2>
 
@@ -353,7 +353,7 @@ export default function CreateEventPage() {
                   required
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
+                  className="w-full bg-zinc-950/80 border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
                 />
               </div>
 
@@ -366,7 +366,7 @@ export default function CreateEventPage() {
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
                   placeholder="e.g. 10:00 AM PST"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+                  className="w-full bg-zinc-950/80 border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
                 />
               </div>
 
@@ -378,7 +378,7 @@ export default function CreateEventPage() {
                   value={capacity}
                   onChange={(e) => setCapacity(e.target.value)}
                   placeholder="150"
-                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
+                  className="w-full bg-zinc-950/80 border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-zinc-100 focus:outline-none focus:border-yellow-400 transition-colors"
                 />
               </div>
             </div>
@@ -393,13 +393,13 @@ export default function CreateEventPage() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. 101 California St, San Francisco, CA or https://zoom.us/j/..."
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+                className="w-full bg-zinc-950/80 border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
               />
             </div>
           </section>
 
           {/* Action Row */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-zinc-800">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-3 border-t border-white/[0.06]">
             <Link
               href="/events"
               className="text-xs font-semibold text-zinc-400 hover:text-white transition-colors"
@@ -416,7 +416,7 @@ export default function CreateEventPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full sm:w-auto px-7 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-bold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+                  className="w-full sm:w-auto px-7 py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-bold text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
                 >
                   <Sparkles className="w-4 h-4 fill-zinc-950" />
                   {isSubmitting ? "Saving to Catalog..." : "Publish Event Live"}

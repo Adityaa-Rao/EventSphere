@@ -369,15 +369,24 @@ export function useEvents() {
   }, [])
 
   useEffect(() => {
-    reload()
-    const handleUpdate = () => reload()
+    let mounted = true
+    const handleUpdate = () => {
+      if (mounted) {
+        setEvents(getStoredEvents())
+        setRsvps(getStoredRsvps())
+        setLoaded(true)
+      }
+    }
+    const timer = setTimeout(handleUpdate, 0)
     window.addEventListener("eventsphere_storage_update", handleUpdate)
     window.addEventListener("storage", handleUpdate)
     return () => {
+      mounted = false
+      clearTimeout(timer)
       window.removeEventListener("eventsphere_storage_update", handleUpdate)
       window.removeEventListener("storage", handleUpdate)
     }
-  }, [reload])
+  }, [])
 
   return { events, rsvps, loaded, reload, toggleRsvp: toggleRsvpStatus, removeEvent: deleteEvent }
 }
@@ -393,15 +402,23 @@ export function useNotifications() {
   }, [])
 
   useEffect(() => {
-    reload()
-    const handleUpdate = () => reload()
+    let mounted = true
+    const handleUpdate = () => {
+      if (mounted) {
+        setNotifications(getStoredNotifications())
+        setLoaded(true)
+      }
+    }
+    const timer = setTimeout(handleUpdate, 0)
     window.addEventListener("eventsphere_notifications_update", handleUpdate)
     window.addEventListener("storage", handleUpdate)
     return () => {
+      mounted = false
+      clearTimeout(timer)
       window.removeEventListener("eventsphere_notifications_update", handleUpdate)
       window.removeEventListener("storage", handleUpdate)
     }
-  }, [reload])
+  }, [])
 
   const unreadCount = notifications.filter((n) => !n.read).length
 
@@ -409,6 +426,7 @@ export function useNotifications() {
     notifications,
     unreadCount,
     loaded,
+    reload,
     markAsRead: markNotificationAsRead,
     markAllAsRead: markAllNotificationsAsRead,
     clearAll: clearAllNotifications,

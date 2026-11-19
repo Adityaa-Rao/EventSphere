@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, Copy, Download, ShieldCheck } from "lucide-react"
+import { Check, Copy, ShieldCheck } from "lucide-react"
 
 interface UniqueQrCodeProps {
   eventId: string
@@ -111,7 +111,7 @@ export function UniqueQrCode({
   const passUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(`eventsphere://pass/${eventId}?code=${passCode}&title=${encodeURIComponent(eventTitle)}`)}&color=000000&bgcolor=FFFFFF`
 
   return (
-    <div className="flex flex-col items-center p-4 rounded-2xl border border-zinc-800 bg-zinc-950 shadow-inner">
+    <div className="flex flex-col items-center p-4 rounded-2xl border border-white/[0.08] bg-zinc-950/80 shadow-inner">
       {/* QR Visual Container */}
       <div
         className="p-3 rounded-xl bg-white shadow-md flex items-center justify-center relative overflow-hidden group"
@@ -172,7 +172,7 @@ export function UniqueQrCode({
         </div>
 
         <span className="text-[10px] text-zinc-400 flex items-center gap-1">
-          <ShieldCheck className="w-3 h-3 text-emerald-400" /> Cryptographically Unique Event Pass
+          <ShieldCheck className="w-3 h-3 text-emerald-400" /> Pass for {ticketHolder}
         </span>
       </div>
     </div>

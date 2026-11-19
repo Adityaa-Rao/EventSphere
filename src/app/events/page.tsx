@@ -6,10 +6,10 @@ import { Navbar } from "@/components/landing/Navbar"
 import { Footer } from "@/components/landing/Footer"
 import { useEvents, EventItem } from "@/lib/events-store"
 import { UniqueQrCode } from "@/components/unique-qr-code"
-import { Calendar, Clock, MapPin, Users, Plus, Search, Filter, Check, ArrowLeft, Tag, QrCode, ExternalLink, X, Sparkles, User, Share2, Trash2 } from "lucide-react"
+import { Calendar, Clock, MapPin, Users, Plus, Search, Check, ArrowLeft, Tag, QrCode, X, Sparkles, User, Share2, Trash2 } from "lucide-react"
 
 export default function EventsDiscoveryPage() {
-  const { events, rsvps, loaded, toggleRsvp, removeEvent } = useEvents()
+  const { events, rsvps, toggleRsvp, removeEvent } = useEvents()
 
   const [selectedCategory, setSelectedCategory] = React.useState<string>("All")
   const [scopeFilter, setScopeFilter] = React.useState<"all" | "mine" | "rsvpd">("all")
@@ -89,19 +89,19 @@ export default function EventsDiscoveryPage() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 pt-32 pb-24">
         {/* Breadcrumb & Editorial Header */}
-        <div className="mb-10">
+        <div className="mb-8">
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors mb-4"
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-400 hover:text-white transition-colors mb-4"
           >
             <ArrowLeft className="w-3.5 h-3.5 text-yellow-400" /> Back to Home
           </Link>
 
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-zinc-850">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-white/[0.06]">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="w-2 h-2 rounded-full bg-yellow-400" />
-                <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">
+                <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-widest">
                   Live Event Registry
                 </span>
               </div>
@@ -115,7 +115,7 @@ export default function EventsDiscoveryPage() {
 
             <Link
               href="/events/create"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-bold text-xs sm:text-sm shadow-md transition-all self-start md:self-auto active:scale-95"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-zinc-950 font-bold text-xs sm:text-sm shadow-sm transition-all self-start md:self-auto active:scale-95"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
               Host an Event
@@ -124,53 +124,57 @@ export default function EventsDiscoveryPage() {
         </div>
 
         {/* Scope Tabs (All / My Events / My RSVPs) */}
-        <div className="flex items-center gap-2 mb-6 border-b border-zinc-850 pb-3">
-          <button
-            onClick={() => setScopeFilter("all")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors ${
-              scopeFilter === "all"
-                ? "bg-zinc-850 text-white border border-zinc-700"
-                : "text-zinc-400 hover:text-zinc-200"
-            }`}
-          >
-            All Events ({events.length})
-          </button>
-          <button
-            onClick={() => setScopeFilter("mine")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 ${
-              scopeFilter === "mine"
-                ? "bg-yellow-400/15 text-yellow-400 border border-yellow-400/30"
-                : "text-zinc-400 hover:text-zinc-200"
-            }`}
-          >
-            <span>My Created Events</span>
-            {userCreatedCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-yellow-400 text-zinc-950 text-[10px] flex items-center justify-center font-extrabold">
-                {userCreatedCount}
-              </span>
-            )}
-          </button>
-          <button
-            onClick={() => setScopeFilter("rsvpd")}
-            className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 ${
-              scopeFilter === "rsvpd"
-                ? "bg-zinc-850 text-white border border-zinc-700"
-                : "text-zinc-400 hover:text-zinc-200"
-            }`}
-          >
-            <span>My RSVPs</span>
-            {rsvpdCount > 0 && (
-              <span className="w-4 h-4 rounded-full bg-zinc-700 text-white text-[10px] flex items-center justify-center font-bold">
-                {rsvpdCount}
-              </span>
-            )}
-          </button>
+        <div className="flex items-center gap-2 mb-6">
+          <div className="inline-flex p-1 rounded-xl bg-zinc-900/60 border border-white/[0.08] backdrop-blur-md">
+            <button
+              onClick={() => setScopeFilter("all")}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                scopeFilter === "all"
+                  ? "bg-zinc-800 text-white shadow-sm"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              All Events ({events.length})
+            </button>
+            <button
+              onClick={() => setScopeFilter("mine")}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                scopeFilter === "mine"
+                  ? "bg-yellow-400 text-zinc-950 font-bold shadow-sm"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              <span>Hosted by Me</span>
+              {userCreatedCount > 0 && (
+                <span className={`w-4 h-4 rounded-full text-[10px] flex items-center justify-center font-bold ${
+                  scopeFilter === "mine" ? "bg-zinc-950 text-yellow-400" : "bg-yellow-400 text-zinc-950"
+                }`}>
+                  {userCreatedCount}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setScopeFilter("rsvpd")}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                scopeFilter === "rsvpd"
+                  ? "bg-zinc-800 text-white shadow-sm"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+            >
+              <span>My RSVPs</span>
+              {rsvpdCount > 0 && (
+                <span className="w-4 h-4 rounded-full bg-zinc-700 text-white text-[10px] flex items-center justify-center font-bold">
+                  {rsvpdCount}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="p-4 rounded-2xl border border-zinc-800 bg-zinc-900/50 backdrop-blur-xl mb-8 flex flex-col lg:flex-row items-center justify-between gap-4">
+        <div className="p-3 rounded-2xl border border-white/[0.08] bg-zinc-900/50 backdrop-blur-xl mb-8 flex flex-col lg:flex-row items-center justify-between gap-4">
           {/* Category Chips */}
-          <div className="flex items-center gap-1.5 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0 scrollbar-none">
+          <div className="flex items-center gap-1.5 overflow-x-auto w-full lg:w-auto pb-1 lg:pb-0 scrollbar-none">
             {categories.map((cat) => (
               <button
                 key={cat}
@@ -178,7 +182,7 @@ export default function EventsDiscoveryPage() {
                 className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
                   selectedCategory === cat
                     ? "bg-yellow-400 text-zinc-950 font-bold shadow-sm"
-                    : "text-zinc-400 hover:text-white hover:bg-zinc-800"
+                    : "text-zinc-400 hover:text-white hover:bg-white/[0.05]"
                 }`}
               >
                 {cat}
@@ -187,15 +191,15 @@ export default function EventsDiscoveryPage() {
           </div>
 
           {/* Pricing & Search */}
-          <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-            <div className="flex items-center gap-1 bg-zinc-950 border border-zinc-800 rounded-lg p-1">
+          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+            <div className="flex items-center gap-1 bg-zinc-950/80 border border-white/[0.08] rounded-lg p-0.5">
               {priceOptions.map((opt) => (
                 <button
                   key={opt}
                   onClick={() => setPriceFilter(opt)}
                   className={`px-3 py-1 rounded text-xs font-medium transition-all ${
                     priceFilter === opt
-                      ? "bg-zinc-800 text-yellow-400 font-bold"
+                      ? "bg-zinc-800 text-yellow-400 font-bold shadow-sm"
                       : "text-zinc-400 hover:text-white"
                   }`}
                 >
@@ -211,8 +215,16 @@ export default function EventsDiscoveryPage() {
                 placeholder="Search title, venue..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg pl-8 pr-3 py-1.5 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-yellow-400 transition-colors"
+                className="w-full bg-zinc-950/80 border border-white/[0.08] rounded-lg pl-8 pr-8 py-1.5 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-yellow-400 transition-colors"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white p-0.5"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -220,7 +232,7 @@ export default function EventsDiscoveryPage() {
         {/* Counter & Toast Notice */}
         <div className="mb-6 flex items-center justify-between text-xs text-zinc-400">
           <span>
-            Displaying <strong className="text-white">{filteredEvents.length}</strong> events
+            Displaying <strong className="text-white font-medium">{filteredEvents.length}</strong> events
             {selectedCategory !== "All" && ` in ${selectedCategory}`}
           </span>
           {toastMessage && (
@@ -232,10 +244,10 @@ export default function EventsDiscoveryPage() {
 
         {/* Cards Grid */}
         {filteredEvents.length === 0 ? (
-          <div className="py-20 px-6 text-center border border-dashed border-zinc-800 rounded-2xl bg-zinc-900/20">
+          <div className="py-20 px-6 text-center border border-dashed border-white/[0.10] rounded-2xl bg-zinc-900/20">
             <Tag className="w-10 h-10 text-zinc-600 mx-auto mb-3" />
             <h3 className="text-base font-bold text-white">No matching events</h3>
-            <p className="text-zinc-500 text-xs mt-1 max-w-sm mx-auto">
+            <p className="text-zinc-500 text-xs mt-1 max-w-sm mx-auto font-normal">
               {scopeFilter === "mine"
                 ? "You haven't created any events yet. Click below to host your first gathering."
                 : "Try resetting your search query or switching categories."}
@@ -243,7 +255,7 @@ export default function EventsDiscoveryPage() {
             {scopeFilter === "mine" ? (
               <Link
                 href="/events/create"
-                className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-lg bg-yellow-400 text-zinc-950 text-xs font-bold hover:bg-yellow-300 transition-all"
+                className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-lg bg-yellow-400 text-zinc-950 text-xs font-bold hover:bg-yellow-300 transition-all shadow-sm"
               >
                 <Plus className="w-3.5 h-3.5 stroke-[2.5]" /> Create an Event
               </Link>
@@ -255,7 +267,7 @@ export default function EventsDiscoveryPage() {
                   setPriceFilter("All")
                   setScopeFilter("all")
                 }}
-                className="mt-4 px-4 py-2 rounded-lg bg-zinc-800 text-zinc-200 text-xs font-semibold hover:bg-zinc-700"
+                className="mt-4 px-4 py-2 rounded-lg bg-zinc-800 text-zinc-200 text-xs font-semibold hover:bg-zinc-700 transition-colors"
               >
                 Reset All Filters
               </button>
@@ -268,33 +280,33 @@ export default function EventsDiscoveryPage() {
               return (
                 <div
                   key={event.id}
-                  className="rounded-2xl border border-zinc-800 bg-zinc-900/50 hover:border-zinc-700 transition-all duration-200 overflow-hidden flex flex-col justify-between group"
+                  className="rounded-2xl border border-white/[0.08] bg-zinc-900/40 hover:border-white/[0.18] hover:bg-zinc-900/60 transition-all duration-200 overflow-hidden flex flex-col justify-between group"
                 >
                   <div>
                     {/* Cover Photo */}
                     <div
                       onClick={() => setActiveModalEvent(event)}
-                      className="relative aspect-[16/10] overflow-hidden bg-zinc-950 cursor-pointer"
+                      className="relative aspect-[16/9] overflow-hidden bg-zinc-950 cursor-pointer"
                     >
                       <img
                         src={event.image}
                         alt={event.title}
-                        className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/20 to-transparent" />
 
                       <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-zinc-950/90 backdrop-blur-md text-yellow-400 border border-yellow-400/30">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-zinc-950/90 backdrop-blur-md text-yellow-400 border border-yellow-400/30">
                           {event.category}
                         </span>
                         {event.isUserCreated && (
-                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide bg-yellow-400 text-zinc-950 shadow-sm flex items-center gap-1">
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide bg-yellow-400 text-zinc-950 shadow-sm flex items-center gap-1">
                             <Sparkles className="w-3 h-3 fill-zinc-950" /> Host
                           </span>
                         )}
                       </div>
 
-                      <div className="absolute bottom-3 right-3 px-2.5 py-0.5 rounded-md text-xs font-bold bg-zinc-950/90 text-zinc-200 border border-zinc-800">
+                      <div className="absolute bottom-3 right-3 px-2.5 py-0.5 rounded-md text-xs font-bold bg-zinc-950/90 text-zinc-200 border border-white/[0.08]">
                         {event.price}
                       </div>
                     </div>
@@ -329,11 +341,11 @@ export default function EventsDiscoveryPage() {
                   </div>
 
                   {/* Footer */}
-                  <div className="p-5 pt-0 border-t border-zinc-850/80 mt-2 flex items-center justify-between">
+                  <div className="p-5 pt-0 border-t border-white/[0.06] mt-2 flex items-center justify-between">
                     <div className="flex items-center gap-1.5 text-xs text-zinc-400">
                       <Users className="w-3.5 h-3.5 text-yellow-400" />
                       <span>
-                        <strong className="text-zinc-200">{event.attendees}</strong> Attending
+                        <strong className="text-zinc-200 font-medium">{event.attendees}</strong> Attending
                       </span>
                     </div>
 
@@ -342,7 +354,7 @@ export default function EventsDiscoveryPage() {
                       {event.isUserCreated && (
                         <button
                           onClick={(e) => handleDelete(event, e)}
-                          className="p-2 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                          className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                           title="Remove this event"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -351,7 +363,7 @@ export default function EventsDiscoveryPage() {
 
                       <button
                         onClick={() => handleShare(event)}
-                        className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+                        className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.05] transition-colors"
                         title="Share event link"
                       >
                         <Share2 className="w-3.5 h-3.5" />
@@ -359,7 +371,7 @@ export default function EventsDiscoveryPage() {
 
                       <button
                         onClick={() => toggleRsvp(event.id)}
-                        className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95 ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95 ${
                           isEventRsvpd
                             ? "bg-zinc-800 text-yellow-400 border border-yellow-400/30"
                             : "bg-yellow-400 text-zinc-950 hover:bg-yellow-300 shadow-sm"
@@ -388,41 +400,42 @@ export default function EventsDiscoveryPage() {
           onClick={(e) => {
             if (e.target === e.currentTarget) setActiveModalEvent(null);
           }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-sm animate-in fade-in-50 cursor-pointer"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in-50 cursor-pointer"
         >
-          <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl border border-zinc-850 bg-zinc-950 p-6 shadow-2xl cursor-default">
-            {/* Top Close Button with text and icon */}
+          <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl border border-white/[0.12] bg-zinc-950 p-6 shadow-2xl cursor-default">
+            {/* Top Close Button */}
             <button
               onClick={() => setActiveModalEvent(null)}
-              className="absolute top-4 right-4 px-3 py-1.5 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-850 text-xs font-semibold flex items-center gap-1.5 transition-colors z-10 shadow-sm"
+              className="absolute top-4 right-4 p-2 rounded-full bg-zinc-900/80 border border-white/[0.08] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors z-10"
+              aria-label="Close modal"
             >
-              <X className="w-3.5 h-3.5" />
-              <span>Close</span>
+              <X className="w-4 h-4" />
             </button>
 
             {/* Banner */}
-            <div className="aspect-[21/9] rounded-xl overflow-hidden border border-zinc-800 mb-5 relative">
+            <div className="aspect-[16/9] rounded-2xl overflow-hidden border border-white/[0.08] mb-5 relative bg-zinc-950">
               <img
                 src={activeModalEvent.image}
                 alt={activeModalEvent.title}
                 className="w-full h-full object-cover"
               />
-              <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-zinc-950/90 text-yellow-400 border border-yellow-400/30">
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent" />
+              <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-zinc-950/90 text-yellow-400 border border-yellow-400/30">
                 {activeModalEvent.category}
               </span>
               {activeModalEvent.isUserCreated && (
-                <span className="absolute top-3 right-3 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-yellow-400 text-zinc-950">
-                  Created by You
+                <span className="absolute bottom-3 left-3 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-zinc-950">
+                  Host
                 </span>
               )}
             </div>
 
             <div className="flex items-center gap-2 text-xs text-zinc-400 mb-2">
               <User className="w-3.5 h-3.5 text-yellow-400" />
-              <span>Organized by <strong className="text-zinc-200">{activeModalEvent.organizer}</strong></span>
+              <span>Organized by <strong className="text-zinc-200 font-medium">{activeModalEvent.organizer}</strong></span>
             </div>
 
-            <h2 className="text-xl font-bold text-white mb-2">
+            <h2 className="text-xl font-bold text-white mb-2 leading-tight">
               {activeModalEvent.title}
             </h2>
 
@@ -431,39 +444,39 @@ export default function EventsDiscoveryPage() {
             </p>
 
             {/* Logistics Grid */}
-            <div className="grid grid-cols-2 gap-3 p-4 rounded-xl border border-zinc-850 bg-zinc-900/60 text-xs mb-5">
+            <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl border border-white/[0.06] bg-zinc-900/40 text-xs mb-5">
               <div>
-                <span className="text-zinc-500 block mb-0.5">Date & Time</span>
-                <span className="text-zinc-200 font-semibold">{activeModalEvent.date} • {activeModalEvent.time}</span>
+                <span className="text-zinc-500 block mb-0.5 text-[11px]">Date & Time</span>
+                <span className="text-zinc-200 font-medium">{activeModalEvent.date} • {activeModalEvent.time}</span>
               </div>
               <div>
-                <span className="text-zinc-500 block mb-0.5">Location</span>
-                <span className="text-zinc-200 font-semibold truncate block">{activeModalEvent.location}</span>
+                <span className="text-zinc-500 block mb-0.5 text-[11px]">Venue</span>
+                <span className="text-zinc-200 font-medium truncate block">{activeModalEvent.location}</span>
               </div>
               <div>
-                <span className="text-zinc-500 block mb-0.5">Ticket Tier</span>
+                <span className="text-zinc-500 block mb-0.5 text-[11px]">Ticket Tier</span>
                 <span className="text-yellow-400 font-bold">{activeModalEvent.price}</span>
               </div>
               <div>
-                <span className="text-zinc-500 block mb-0.5">Capacity</span>
-                <span className="text-zinc-200 font-semibold">
+                <span className="text-zinc-500 block mb-0.5 text-[11px]">Capacity</span>
+                <span className="text-zinc-200 font-medium">
                   {activeModalEvent.attendees} / {activeModalEvent.capacity} seats filled
                 </span>
               </div>
             </div>
 
             {/* UNIQUE QR CODE PASS CONTAINER */}
-            <div className="mb-6 flex flex-col items-center">
-              <div className="w-full flex items-center justify-between mb-2">
+            <div className="mb-6 flex flex-col items-center p-4 rounded-2xl border border-white/[0.06] bg-zinc-900/20">
+              <div className="w-full flex items-center justify-between mb-3">
                 <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <QrCode className="w-4 h-4 text-yellow-400" /> Unique Event Pass
+                  <QrCode className="w-4 h-4 text-yellow-400" /> Verifiable Event Pass
                 </span>
-                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
                   rsvps[activeModalEvent.id]
                     ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"
                     : "bg-zinc-800 text-zinc-400"
                 }`}>
-                  {rsvps[activeModalEvent.id] ? "Pass Valid" : "Unreserved"}
+                  {rsvps[activeModalEvent.id] ? "VALID ENTRY PASS" : "UNRESERVED"}
                 </span>
               </div>
 
@@ -471,46 +484,45 @@ export default function EventsDiscoveryPage() {
               <UniqueQrCode
                 eventId={activeModalEvent.id}
                 eventTitle={activeModalEvent.title}
-                size={160}
+                size={150}
               />
             </div>
 
             {/* Action Bar */}
-            <div className="flex items-center justify-between gap-3 pt-3 border-t border-zinc-850">
+            <div className="flex items-center justify-between gap-3 pt-3 border-t border-white/[0.06]">
               {/* Remove button if user created */}
               {activeModalEvent.isUserCreated ? (
                 <button
                   onClick={() => handleDelete(activeModalEvent)}
-                  className="px-3.5 py-2 rounded-xl border border-red-500/30 bg-red-500/10 text-xs font-bold text-red-400 hover:bg-red-500/20 flex items-center gap-1.5 transition-colors"
+                  className="px-3 py-2 rounded-xl border border-red-500/20 bg-red-500/10 text-xs font-semibold text-red-400 hover:bg-red-500/20 flex items-center gap-1.5 transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  Remove Event
+                  Remove
                 </button>
               ) : (
-                <div />
+                <button
+                  onClick={() => handleShare(activeModalEvent)}
+                  className="px-3.5 py-2 rounded-xl border border-white/[0.08] text-xs font-semibold text-zinc-300 hover:text-white hover:bg-white/[0.05] transition-colors flex items-center gap-1.5"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  Share
+                </button>
               )}
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveModalEvent(null)}
-                  className="px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-850 hover:bg-zinc-800 text-xs font-bold text-zinc-200 hover:text-white transition-colors"
+                  className="px-4 py-2 rounded-xl border border-white/[0.08] hover:bg-white/[0.05] text-xs font-semibold text-zinc-300 hover:text-white transition-colors"
                 >
                   Close
                 </button>
 
                 <button
-                  onClick={() => handleShare(activeModalEvent)}
-                  className="px-4 py-2.5 rounded-xl border border-zinc-800 text-xs font-bold text-zinc-300 hover:text-white hover:bg-zinc-850"
-                >
-                  Copy Link
-                </button>
-
-                <button
                   onClick={() => toggleRsvp(activeModalEvent.id)}
-                  className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 ${
                     rsvps[activeModalEvent.id]
                       ? "bg-zinc-800 text-yellow-400 border border-yellow-400/30"
-                      : "bg-yellow-400 text-zinc-950 hover:bg-yellow-300 shadow-md"
+                      : "bg-yellow-400 text-zinc-950 hover:bg-yellow-300"
                   }`}
                 >
                   {rsvps[activeModalEvent.id] ? "Cancel RSVP" : "Confirm My RSVP"}

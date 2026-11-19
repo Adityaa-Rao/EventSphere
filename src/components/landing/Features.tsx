@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Calendar, BellRing, Sparkles, Users, QrCode, CreditCard, Shield, Clock, Layers } from "lucide-react"
+import { Calendar, BellRing, Sparkles, Users, QrCode, CreditCard, Layers } from "lucide-react"
 
 const features = [
   {
@@ -38,16 +38,16 @@ const features = [
 
 export function Features() {
   return (
-    <section id="features" className="py-24 px-4 mx-auto max-w-7xl">
-      <div className="mb-16 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 text-xs font-bold uppercase tracking-wider rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400">
+    <section id="features" className="py-20 px-4 mx-auto max-w-7xl">
+      <div className="mb-14 text-center">
+        <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 text-xs font-semibold uppercase tracking-wider rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Core Infrastructure</span>
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
           Built for operators who <span className="text-gradient">care about craft.</span>
         </h2>
-        <p className="max-w-2xl mx-auto text-sm sm:text-base text-zinc-400 mt-2">
+        <p className="max-w-xl mx-auto text-sm sm:text-base text-zinc-400 mt-2">
           Every tool you need to run seamless gatherings, stripped of bloat and engineered for reliability.
         </p>
       </div>
@@ -56,17 +56,18 @@ export function Features() {
         {features.map((feature, index) => (
           <div
             key={index}
-            className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 hover:border-zinc-700 transition-colors flex flex-col justify-between"
+            className="p-6 rounded-2xl border border-white/[0.08] bg-zinc-900/40 hover:border-yellow-400/30 hover:bg-zinc-900/70 transition-all duration-200 flex flex-col justify-between group"
           >
             <div>
-              <div className="w-10 h-10 rounded-xl bg-zinc-850 border border-zinc-800 text-yellow-400 flex items-center justify-center mb-4">
+              <div className="w-10 h-10 rounded-xl bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 flex items-center justify-center mb-4 transition-transform group-hover:scale-105">
                 <feature.icon className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-bold text-white mb-2">{feature.title}</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">{feature.description}</p>
-            </div>
-            <div className="mt-6 pt-3 border-t border-zinc-850 text-[11px] font-mono text-zinc-500">
-              Live in Production
+              <h3 className="text-base font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                {feature.title}
+              </h3>
+              <p className="text-xs text-zinc-400 leading-relaxed font-normal">
+                {feature.description}
+              </p>
             </div>
           </div>
         ))}

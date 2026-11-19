@@ -26,9 +26,9 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section id="testimonials" className="py-24 px-4 mx-auto max-w-7xl">
-      <div className="text-center mb-16">
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 text-xs font-bold uppercase tracking-wider rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400">
+    <section id="testimonials" className="py-20 px-4 mx-auto max-w-7xl">
+      <div className="text-center mb-14">
+        <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 text-xs font-semibold uppercase tracking-wider rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Operator Perspectives</span>
         </div>
@@ -44,7 +44,7 @@ export function Testimonials() {
         {testimonials.map((item, index) => (
           <div
             key={index}
-            className="p-6 rounded-2xl border border-zinc-800 bg-zinc-900/40 hover:border-zinc-700 transition-colors flex flex-col justify-between"
+            className="p-6 rounded-2xl border border-white/[0.08] bg-zinc-900/40 hover:border-white/[0.18] hover:bg-zinc-900/60 transition-all flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center gap-1 mb-4 text-yellow-400">
@@ -53,15 +53,15 @@ export function Testimonials() {
                 ))}
               </div>
               <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed mb-6 font-normal">
-                "{item.quote}"
+                &ldquo;{item.quote}&rdquo;
               </p>
             </div>
 
-            <div className="flex items-center gap-3 pt-4 border-t border-zinc-850">
+            <div className="flex items-center gap-3 pt-4 border-t border-white/[0.06]">
               <img
                 src={item.avatar}
                 alt={item.author}
-                className="w-10 h-10 rounded-full object-cover border border-zinc-700"
+                className="w-10 h-10 rounded-full object-cover border border-white/[0.12]"
               />
               <div>
                 <h4 className="text-xs font-bold text-white">{item.author}</h4>

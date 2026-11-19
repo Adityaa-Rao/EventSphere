@@ -5,6 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --color-zinc-750: #2b2b30;
+  --color-zinc-850: #1b1b1f;
+  --color-zinc-925: #121215;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -132,35 +135,35 @@
 
 @layer utilities {
   .glass {
-    @apply bg-zinc-900/60 backdrop-blur-xl border border-zinc-700/50 shadow-xl;
+    @apply bg-zinc-950/70 backdrop-blur-xl border border-white/[0.08] shadow-xl;
   }
   
   .glass-card {
-    @apply bg-zinc-900/50 backdrop-blur-xl border border-zinc-700/40 shadow-2xl;
+    @apply bg-zinc-900/50 backdrop-blur-xl border border-white/[0.07] shadow-xl;
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-400;
   }
 
   .silver-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-100 via-zinc-200 to-slate-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-slate-100 via-zinc-200 to-slate-300;
   }
 
   .silver-border {
-    @apply border border-zinc-700/60 hover:border-yellow-400/50 transition-colors;
+    @apply border border-white/[0.08] hover:border-yellow-400/40 transition-colors;
   }
 
   .yellow-glow {
-    box-shadow: 0 0 35px -5px rgba(250, 204, 21, 0.35);
+    box-shadow: 0 0 24px -4px rgba(250, 204, 21, 0.25);
   }
 
   .silver-glow {
-    box-shadow: 0 0 35px -5px rgba(203, 213, 225, 0.15);
+    box-shadow: 0 0 24px -4px rgba(203, 213, 225, 0.10);
   }
 
   .mesh-gradient {
-    background: radial-gradient(circle at 50% 20%, rgba(250, 204, 21, 0.08) 0%, transparent 60%),
-                radial-gradient(circle at 80% 80%, rgba(148, 163, 184, 0.05) 0%, transparent 50%);
+    background: radial-gradient(circle at 50% 0%, rgba(250, 204, 21, 0.05) 0%, transparent 60%),
+                radial-gradient(circle at 80% 50%, rgba(148, 163, 184, 0.03) 0%, transparent 50%);
   }
 }

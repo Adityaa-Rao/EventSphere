@@ -1,11 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MapPin, Sparkles, Tag } from "lucide-react"
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react"
 import { useEvents, EventItem } from "@/lib/events-store"
 
 export default function CalendarPage() {
-  const { events, rsvps, loaded } = useEvents()
+  const { events } = useEvents()
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
   
   // Map events to day numbers in the active month
@@ -18,14 +18,13 @@ export default function CalendarPage() {
       // Find events that match this day or distribute across days
       const matchedEvents: EventItem[] = []
       events.forEach((evt) => {
-        // Check if date contains this day number or if it's user created
         const dayString = String(adjustedDate).padStart(2, "0")
         if (evt.date && evt.date.endsWith(`-${dayString}`) && isCurrentMonth) {
           matchedEvents.push(evt)
         }
       })
 
-      // Add a couple default anchor days if empty
+      // Add default anchor days if empty
       if (adjustedDate === 14 && isCurrentMonth && matchedEvents.length === 0 && events[0]) {
         matchedEvents.push(events[0])
       }
@@ -37,7 +36,7 @@ export default function CalendarPage() {
         date: adjustedDate,
         isCurrentMonth,
         events: matchedEvents,
-        isToday: adjustedDate === 18, // current date simulation
+        isToday: adjustedDate === 18,
       }
     })
   }, [events])
@@ -58,22 +57,22 @@ export default function CalendarPage() {
           </p>
         </div>
         
-        <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-800 rounded-xl p-1 shadow-sm">
-          <button className="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white">
+        <div className="flex items-center gap-2 bg-zinc-900/60 border border-white/[0.08] rounded-xl p-1 shadow-sm">
+          <button className="p-1.5 hover:bg-white/[0.05] rounded-lg text-zinc-400 hover:text-white transition-colors">
             <ChevronLeft className="w-4 h-4" />
           </button>
           <span className="font-bold text-xs sm:text-sm text-zinc-200 w-32 text-center">November 2026</span>
-          <button className="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white">
+          <button className="p-1.5 hover:bg-white/[0.05] rounded-lg text-zinc-400 hover:text-white transition-colors">
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      <div className="flex-1 bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col shadow-xl">
+      <div className="flex-1 bg-zinc-900/40 border border-white/[0.08] rounded-2xl overflow-hidden flex flex-col shadow-sm">
         {/* Days Header */}
-        <div className="grid grid-cols-7 border-b border-zinc-800 bg-zinc-950/60">
+        <div className="grid grid-cols-7 border-b border-white/[0.06] bg-zinc-950/60">
           {days.map((day) => (
-            <div key={day} className="py-2.5 text-center text-xs font-bold uppercase tracking-wider text-zinc-400">
+            <div key={day} className="py-2.5 text-center text-[11px] font-bold uppercase tracking-wider text-zinc-400">
               {day}
             </div>
           ))}
@@ -84,14 +83,14 @@ export default function CalendarPage() {
           {calendarDays.map((day, i) => (
             <div 
               key={i} 
-              className={`border-b border-r border-zinc-850/80 p-2 min-h-[110px] transition-colors hover:bg-zinc-850/30 ${
-                !day.isCurrentMonth ? "bg-zinc-950/60 opacity-30" : ""
+              className={`border-b border-r border-white/[0.06] p-2 min-h-[110px] transition-colors hover:bg-white/[0.02] ${
+                !day.isCurrentMonth ? "bg-zinc-950/60 opacity-25" : ""
               } ${i % 7 === 6 ? "border-r-0" : ""} ${i >= 28 ? "border-b-0" : ""}`}
             >
               <div className="flex justify-between items-start">
-                <span className={`text-xs font-bold w-6 h-6 flex items-center justify-center rounded-lg ${
+                <span className={`text-xs font-semibold w-6 h-6 flex items-center justify-center rounded-lg ${
                   day.isToday 
-                    ? "bg-yellow-400 text-zinc-950 font-extrabold shadow-sm" 
+                    ? "bg-yellow-400 text-zinc-950 font-bold shadow-sm" 
                     : "text-zinc-400"
                 }`}>
                   {day.isCurrentMonth ? day.date : ""}
@@ -107,10 +106,10 @@ export default function CalendarPage() {
                 {day.events.map((evt) => (
                   <div 
                     key={evt.id} 
-                    className={`text-[10px] px-2 py-1 rounded border truncate font-medium flex items-center gap-1 cursor-pointer transition-colors ${
+                    className={`text-[10px] px-2 py-1 rounded-md border truncate font-medium flex items-center gap-1 cursor-pointer transition-colors ${
                       evt.isUserCreated
                         ? "bg-yellow-400/15 text-yellow-400 border-yellow-400/30 hover:bg-yellow-400/25"
-                        : "bg-zinc-800/80 text-zinc-300 border-zinc-700 hover:text-white"
+                        : "bg-zinc-800/80 text-zinc-300 border-white/[0.08] hover:text-white"
                     }`}
                     title={`${evt.title} (${evt.time})`}
                   >

@@ -30,9 +30,9 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = React.useState<number | null>(0)
 
   return (
-    <section id="faq" className="py-24 px-4 mx-auto max-w-3xl">
-      <div className="text-center mb-14">
-        <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 text-xs font-bold uppercase tracking-wider rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400">
+    <section id="faq" className="py-20 px-4 mx-auto max-w-3xl">
+      <div className="text-center mb-12">
+        <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 text-xs font-semibold uppercase tracking-wider rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400">
           <HelpCircle className="w-3.5 h-3.5" />
           <span>Operational Details</span>
         </div>
@@ -50,13 +50,15 @@ export function FAQ() {
           return (
             <div
               key={index}
-              className={`rounded-xl border transition-colors overflow-hidden ${
-                isOpen ? "border-zinc-700 bg-zinc-900/70" : "border-zinc-850 bg-zinc-900/30 hover:border-zinc-800"
+              className={`rounded-xl border transition-all duration-200 overflow-hidden ${
+                isOpen
+                  ? "border-white/[0.16] bg-zinc-900/60 shadow-lg"
+                  : "border-white/[0.06] bg-zinc-900/30 hover:border-white/[0.12]"
               }`}
             >
               <button
                 onClick={() => setOpenIndex(isOpen ? null : index)}
-                className="w-full px-5 py-4 flex items-center justify-between text-left text-sm font-bold text-white hover:text-yellow-400 transition-colors"
+                className="w-full px-5 py-4 flex items-center justify-between text-left text-sm font-semibold text-white hover:text-yellow-400 transition-colors"
               >
                 <span>{faq.q}</span>
                 <ChevronDown
@@ -67,7 +69,7 @@ export function FAQ() {
               </button>
 
               {isOpen && (
-                <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-zinc-400 leading-relaxed border-t border-zinc-800/60">
+                <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-zinc-400 leading-relaxed border-t border-white/[0.04]">
                   {faq.a}
                 </div>
               )}

@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Bell, Check, Trash2, Calendar, UserCheck, ShieldAlert, Sparkles, X } from "lucide-react"
+import { Bell, Trash2, Calendar, UserCheck, ShieldAlert, Sparkles, X } from "lucide-react"
 import { useNotifications, NotificationItem } from "@/lib/events-store"
 
 export function NotificationsPopover() {
@@ -40,12 +40,12 @@ export function NotificationsPopover() {
       {/* Bell Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2.5 rounded-xl border border-zinc-800 bg-zinc-900/80 hover:bg-zinc-850 hover:border-zinc-700 text-zinc-300 hover:text-white transition-all active:scale-95"
+        className="relative p-2 rounded-xl border border-white/[0.08] bg-zinc-900/60 hover:bg-zinc-800/60 hover:border-white/[0.18] text-zinc-300 hover:text-white transition-all active:scale-95"
         aria-label="View notifications"
       >
         <Bell className="w-4 h-4" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-5 h-5 px-1 rounded-full bg-yellow-400 text-zinc-950 font-extrabold text-[10px] shadow-sm animate-in zoom-in-50">
+          <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-yellow-400 text-zinc-950 font-extrabold text-[9px] shadow-sm animate-in zoom-in-50">
             {unreadCount}
           </span>
         )}
@@ -53,9 +53,9 @@ export function NotificationsPopover() {
 
       {/* Popover Card */}
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-80 sm:w-96 rounded-2xl border border-zinc-800 bg-zinc-950/95 shadow-2xl backdrop-blur-2xl z-50 overflow-hidden animate-in fade-in-50 slide-in-from-top-2">
+        <div className="absolute right-0 mt-3 w-80 sm:w-96 rounded-2xl border border-white/[0.10] bg-zinc-950/95 shadow-2xl backdrop-blur-2xl z-50 overflow-hidden animate-in fade-in-50 slide-in-from-top-2">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-850 bg-zinc-900/60">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-zinc-900/60">
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold text-white tracking-wide uppercase">Notifications</span>
               {unreadCount > 0 ? (
@@ -71,7 +71,7 @@ export function NotificationsPopover() {
               {unreadCount > 0 && (
                 <button
                   onClick={() => markAllAsRead()}
-                  className="text-[11px] text-zinc-400 hover:text-yellow-400 transition-colors px-2 py-1 rounded hover:bg-zinc-800"
+                  className="text-[11px] text-zinc-400 hover:text-yellow-400 transition-colors px-2 py-1 rounded hover:bg-white/[0.05]"
                   title="Mark all as read"
                 >
                   Mark all read
@@ -79,7 +79,7 @@ export function NotificationsPopover() {
               )}
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1 text-zinc-400 hover:text-white rounded hover:bg-zinc-800"
+                className="p-1 text-zinc-400 hover:text-white rounded hover:bg-white/[0.05]"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -87,7 +87,7 @@ export function NotificationsPopover() {
           </div>
 
           {/* Notifications List */}
-          <div className="max-h-96 overflow-y-auto divide-y divide-zinc-850/80">
+          <div className="max-h-96 overflow-y-auto divide-y divide-white/[0.05]">
             {notifications.length === 0 ? (
               <div className="py-12 px-6 text-center">
                 <Sparkles className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
@@ -101,11 +101,11 @@ export function NotificationsPopover() {
                 <div
                   key={item.id}
                   onClick={() => markAsRead(item.id)}
-                  className={`p-3.5 transition-colors cursor-pointer flex items-start gap-3 hover:bg-zinc-900/60 ${
-                    !item.read ? "bg-zinc-900/40" : "opacity-75"
+                  className={`p-3.5 transition-colors cursor-pointer flex items-start gap-3 hover:bg-white/[0.04] ${
+                    !item.read ? "bg-white/[0.02]" : "opacity-75"
                   }`}
                 >
-                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/[0.08] flex items-center justify-center flex-shrink-0 mt-0.5">
                     {getIcon(item.type)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -129,8 +129,8 @@ export function NotificationsPopover() {
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className="flex items-center justify-between px-4 py-2.5 border-t border-zinc-850 bg-zinc-900/40 text-[11px]">
-              <span className="text-zinc-500">EventSphere Notification Stream</span>
+            <div className="flex items-center justify-between px-4 py-2.5 border-t border-white/[0.06] bg-zinc-900/40 text-[11px]">
+              <span className="text-zinc-500">Live Notification Feed</span>
               <button
                 onClick={() => clearAll()}
                 className="text-zinc-500 hover:text-red-400 transition-colors flex items-center gap-1 font-medium"

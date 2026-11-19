@@ -35,7 +35,7 @@ export default function RegisterPage() {
             type="text"
             placeholder="John Doe"
             required
-            className="flex h-11 w-full rounded-xl border border-zinc-800 bg-zinc-950/80 px-4 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+            className="flex h-10 w-full rounded-xl border border-white/[0.08] bg-zinc-950/80 px-4 py-2 text-xs sm:text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
           />
         </div>
 
@@ -45,7 +45,7 @@ export default function RegisterPage() {
             type="email"
             placeholder="name@example.com"
             required
-            className="flex h-11 w-full rounded-xl border border-zinc-800 bg-zinc-950/80 px-4 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+            className="flex h-10 w-full rounded-xl border border-white/[0.08] bg-zinc-950/80 px-4 py-2 text-xs sm:text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
           />
         </div>
 
@@ -55,14 +55,14 @@ export default function RegisterPage() {
             type="password"
             placeholder="••••••••"
             required
-            className="flex h-11 w-full rounded-xl border border-zinc-800 bg-zinc-950/80 px-4 py-2 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
+            className="flex h-10 w-full rounded-xl border border-white/[0.08] bg-zinc-950/80 px-4 py-2 text-xs sm:text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-yellow-400 transition-colors"
           />
         </div>
 
         <button
           disabled={isLoading}
           type="submit"
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-bold transition-all focus:outline-none disabled:opacity-50 bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 text-zinc-950 hover:shadow-[0_0_25px_rgba(250,204,21,0.35)] hover:scale-[1.02] active:scale-[0.98] h-11 px-4 py-2 mt-2 shadow-lg shadow-yellow-400/20"
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-xs sm:text-sm font-bold transition-all focus:outline-none disabled:opacity-50 bg-yellow-400 hover:bg-yellow-300 text-zinc-950 h-10 px-4 py-2 mt-2 shadow-sm active:scale-95"
         >
           {isLoading ? "Creating account..." : "Get Started Free"}
         </button>
@@ -70,9 +70,9 @@ export default function RegisterPage() {
 
       <div className="relative my-1">
         <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t border-zinc-800" />
+          <span className="w-full border-t border-white/[0.08]" />
         </div>
-        <div className="relative flex justify-center text-xs uppercase">
+        <div className="relative flex justify-center text-[10px] uppercase tracking-wider">
           <span className="px-2 bg-zinc-900 text-zinc-500 rounded-full">
             Or continue with
           </span>
@@ -82,7 +82,7 @@ export default function RegisterPage() {
       <button
         type="button"
         onClick={() => router.push("/dashboard")}
-        className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-xs font-bold transition-colors border border-zinc-800 bg-zinc-950/60 hover:bg-zinc-800 text-zinc-200 h-11 px-4 py-2"
+        className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-xs font-semibold transition-colors border border-white/[0.08] bg-zinc-950/60 hover:bg-white/[0.04] text-zinc-200 h-10 px-4 py-2"
       >
         <svg viewBox="0 0 24 24" className="w-4 h-4 mr-2" aria-hidden="true">
           <path

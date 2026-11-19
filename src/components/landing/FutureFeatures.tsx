@@ -32,10 +32,10 @@ const roadmap = [
 
 export function FutureFeatures() {
   return (
-    <section className="py-24 border-t border-zinc-850 bg-zinc-950/60">
+    <section className="py-20 border-t border-white/[0.06] bg-zinc-950/40">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 text-xs font-bold uppercase tracking-wider rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400">
+        <div className="text-center mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 text-xs font-semibold uppercase tracking-wider rounded-full border border-yellow-400/30 bg-yellow-400/10 text-yellow-400">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Architecture Roadmap</span>
           </div>
@@ -51,22 +51,22 @@ export function FutureFeatures() {
           {roadmap.map((item, index) => (
             <div
               key={index}
-              className="p-6 rounded-2xl border border-zinc-850 bg-zinc-900/30 hover:border-zinc-750 transition-colors flex flex-col justify-between"
+              className="p-6 rounded-2xl border border-white/[0.08] bg-zinc-900/30 hover:border-white/[0.18] hover:bg-zinc-900/50 transition-all flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <div className="w-9 h-9 rounded-lg bg-zinc-850 text-yellow-400 flex items-center justify-center">
+                  <div className="w-9 h-9 rounded-lg bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 flex items-center justify-center transition-transform group-hover:scale-105">
                     <item.icon className="w-4 h-4" />
                   </div>
-                  <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-zinc-850 text-zinc-400 border border-zinc-800">
+                  <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-white/[0.06]">
                     {item.quarter}
                   </span>
                 </div>
                 <h3 className="text-sm font-bold text-white mb-2">{item.title}</h3>
-                <p className="text-xs text-zinc-400 leading-relaxed">{item.description}</p>
+                <p className="text-xs text-zinc-400 leading-relaxed font-normal">{item.description}</p>
               </div>
 
-              <div className="mt-5 pt-3 border-t border-zinc-850/80 text-[11px] font-mono text-yellow-400/80">
+              <div className="mt-5 pt-3 border-t border-white/[0.06] text-[11px] font-mono text-yellow-400/90 font-medium">
                 In Development →
               </div>
             </div>
